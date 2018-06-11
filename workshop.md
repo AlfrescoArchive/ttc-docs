@@ -66,6 +66,7 @@ As mentioned before our Gateway component will be the single entrypoint for our 
 - Fork [http://github.com/activiti/ttc-infra-gateway](http://github.com/activiti/ttc-infra-gateway)
 - Clone your fork inside the **workshop/** directory
   > git clone http://github.com/<your user>/ttc-infra-gateway
+
 - Import project into Jenkins X:
   > jx import --branches "develop|PR-.*|feature.*"
 
@@ -100,7 +101,7 @@ This service emulates an internal service that will connect with an external Soc
 
 - Fork [http://github.com/activiti/ttc-connectors-dummytwitter](http://github.com/activiti/ttc-connectors-dummytwitter)
 - Clone it inside the **workshop/** directory
-  > git clone http://github.com/<your user>/ttc-infra-gateway
+  > git clone http://github.com/<your user>/ttc-connectors-dummytwitter
 
 - Import into Jenkins X:
   > jx import --branches "develop|PR-.*|feature.*"
@@ -150,44 +151,95 @@ A very common scenario is when your service depends on a service provided by the
 For such cases, you will need to setup inside your environment these infrastructural (environment) services. You can do that by using HELM charts.
 For RabbitMQ you can search for the HELM chart and use it. In Jenkins X you do this by following a GitOps approach, meaning that changing the environment configuration is done by adding commits to a Git repository.
 
+When you installed Jenkins X, two environments and two repositories where created inside your Github accounts and cloned into your laptop/pc.  
+You can find these repositories under:
+**~/.jx/environments/<github user>/environment-<env name>-staging**
+Let's add RabbitMQ to the staging environment:
 
-From the terminal go to :
-cd ~/.jx/environments/<github user>/environment-<env name>-staging
-git pull -> to retrieve the latest changes from the staging environment
-Edit env/requirements.yaml and add at the end
+> cd ~/.jx/environments/<github user>/environment-<env name>-staging
+> git pull -> to retrieve the latest changes from the staging environment
+
+Edit env/requirements.yaml and add append:
+```
 - name: rabbitmq
   repository: https://kubernetes-charts.storage.googleapis.com
   version: 0.8.0
-Edit env/values.yaml and add at the end
+```
+
+Edit env/values.yaml and append:
+```
 rabbitmq:
   rabbitmq:
     username: "guest"
     password: "guest"
   ingress:
     enabled: true
-Be careful with the spaces (it is a yaml file) and caps
-execute : git status -> you should see two files changed
-Do: > git add .
-Then: > git commit -m “adding rabbitmq to staging env”
-Finally: > git push
-You can check now inside the jenkins UI that the staging environment pipeline has been triggered
+```
+
+**Be careful with the spaces (it is a yaml file) and caps**
+Now let's apply the changes:
+
+- Check that the files were modified
+> git status -> you should see two files changed
+
+- Do:
+> git add .
+
+- Then:
+> git commit -m “adding rabbitmq to staging env”
+
+- Finally:
+> git push
+
+You can check now inside the Jenkins UI that the staging environment pipeline has been triggered
 
 
-After the Staging Environment pipeline finish, you should be able to do a > jx logs again inside the staging environment (> jx env staging) and you should see that the service is now connecting to RabbitMQ
+After the Staging Environment pipeline finish, you should be able to check that RabbitMQ is up and running and that the Service is connecting to it:
 
-Building a Marketing Campaign
-Fork github.com/activiti/ttc-rb-english-campaign
-Clone it inside your ttc/ directory
-Import it to Jenkins X:
-> jx import --branches "develop|PR-.*|feature.*"
-Check in Jenkins UI that the project was imported and the initial build is triggered
-From the terminal you can do jx logs and now you need to select which project do you want to tail. Remember always to be in jx env staging.
-You can also check that your pod is running by doing “kubectl get pods” and check that you have 1/1 replicas running.
-Finally you can verify that the url returned by “jx get apps” can be opened in your browser and you get a hello message: “Hello from the Trending Topic Campaign Named: my-runtime-bundle with topic: activiti”
+> jx logs ->  inside the staging environment (> jx env staging)
+
+@TODO: add connection line example
+
+
+# Building a Marketing Campaign
+
+This service is implementing the Business Logic which defines how the campaign should behave. This is a pretty simple and generic campaign which is designed to track Social Media content related to the **Activiti** project. You can of course adapt this to any other topic and build more complex campaigns.
+
+This service was designed to be the Command aspect of the CQRS (Command / Query Responsibility Segregation) pattern. This service is in charge of executing business logic for every tweet that we receive.
+
+@TODO: add images for business processes
+
+
+- Fork [http://github.com/activiti/ttc-rb-english-campaign](http://github.com/activiti/ttc-rb-english-campaign)
+- Clone it inside the **workshop/** directory
+  > git clone http://github.com/<your user>/ttc-rb-english-campaign
+
+- Import it to Jenkins X:
+  > jx import --branches "develop|PR-.*|feature.*"
+
+- Check in Jenkins UI that the project was imported and the initial build is triggered
+
+Now that you more than one service
+> jx logs
+
+will ask you select which project do you want to tail. Remember always to be in **jx env staging** to see your services.
+
+You can also check that your pod is running:
+> kubectl get pods
+
+Check that you have 1/1 replicas running.
+
+By doing
+> jx get apps
+
+You can also get the service URL which is, by default, automatically exposed by Jenkins X - expose controller.
+
+You should be able to access both URLs via your Browser.
 
 This service is going to use RabbitMQ as well, but because we already set it up, there is nothing more required for this service to run.
 
-Time for some tests
+
+### Time for some tests
 > jx get apps
  Copy the URL for the ttc-connectors-dummytwitter feed app:
 > curl <url>/feed
