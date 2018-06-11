@@ -1,77 +1,155 @@
 # Workshop Recommended Steps
-You need to have Jenkins X installed in order to accelerate the deployment of your services into a Kubernetes Cluster. You can definitely achieve the same results without Jenkins X, but the HELM Charts and Kubernetes Descriptors for the Trending Topic Campaign Project were created using Jenkins X. 
-Jenkins X
-For that you run the following command when you have a CGE account with the Kubernetes Engine Enabled:
+You need to have Jenkins X installed in order to accelerate the deployment of your services into a Kubernetes Cluster. You can definitely achieve the same results without Jenkins X, but the HELM Charts and Kubernetes Descriptors for the Trending Topic Campaign Project were created using Jenkins X.
+
+## Jenkins X
+If you don't have a Kubernetes Cluster with Jenkins X installed on it you can create one with:
 
 > jx create cluster gke --kubernetes-version=1.9
+  > europe-west1c
+  > n1-standard-2
 
+This will create a new Kubernetes Cluster inside GKE. Notice that you  need to have the Kubernetes Engine enabled into your account in order to use it.
+- Make sure that you sign in with the google account where you have your kubernetes cluster.
+- Select your availability zone, Then accept all the defaults.
+- When the process ends, make sure that you record the password for Jenkins X admin user.
 
-Make sure that you sign in with the google account where you have your kube cluster.
-
-Select your availability zone, Then accept all the defaults. 
-
-Make sure that you record the password for Jenkins X.
-
-
-Execute
+When Jenkins X is installed you can use the following command to see all the Jenkins X installed services
 
 > jx get urls
 
-Access to Jenkins X URL and login
+- Copy & Access Jenkins URL and login (user admin/<provided password>)
+- Copy & Access Nexus URL and login with the same credentials used for Jenkins
 
-Access to nexus URL and login with the same credentials
+By default, Jenkins X create 3 environments
+- *dev* is where you do the work
+- *staging* is where your services will live (run) as soon as you register them in Jenkins X. Services will be automatically promoted to this environment.
+- *production* is where your services will serve real clients. You need to manually promote services to this environment.
+Use the following command to check and select in which environment you want to be:
+> jx env (and select on of the options)
 
-Fork TTC-* Projects
-https://github.com/activiti/?q=ttc-
- 
- 
+For importing new projects we will need to be in the **dev** environment.
+
+# Fork TTC-* Projects
+
+Repositories [https://github.com/activiti/?q=ttc-](https://github.com/activiti/?q=ttc-)
+
+
 The main idea to fork the projects is to be able to change them by sending PRs or just pushing to these repositories that will be monitored by Jenkins X.
-If you have your own cluster:
-> jx create cluster gke --kubernetes-version=1.9
-> europe-west1c
-> n1-standard-2
+
+We will start by forking and cloning the following two projects:
+- ttc-dashboard-ui -> Front End
+- ttc-infra-gateway -> Gateway
+
+Before cloning anything, we recommend to create a **workshop/** directory somewhere in your laptop/pc.
+
+## Front End
+
+As any application we will end up having a Front End that is going to interact with a bunch of services. This Application will need to know where the services are and we are going to start simply by forking the Github repository, and running the Front End application locally so we can track when our services are being deployed.
 
 
- 
-Let’s start with ttc-connectors-dummytwitter
-Fork it to your github account
-Create a new ttc dir in your laptop
-cd ttc/
-Clone repo:  
-> git clone <URL>
-Then import it to Jenkins X: 
-> jx import --branches "develop|PR-.*|feature.*"
-Go to Jenkins X and check that the new project is registered and being built
+- Fork [http://github.com/activiti/ttc-dashboard-ui](http://github.com/activiti/ttc-dashboard-ui)
+- Clone to your local environment inside the **workshop/** directory
+- go into the ttc-dashboard-ui directory and execute
+  - npm install
+  - npm start
 
-The build should fail at this point, and this is because we need to configure Nexus to pick up other Maven repositories to download some dependencies. 
-Configuring nexus to have custom repositories
-Login with admin/<jenkinsx pass>
-Click in the Server Administration and Configuration menu (Gear)
-Click on Maven2 (Proxy)
-Enter the following information:
-Name: activiti
-Version Policy: Mixed
-URL: https://artifacts.alfresco.com/nexus/content/repositories/activiti-snapshots/
-Scroll Down and Create Repository
-With the repository created you need to add it to the Maven Group (From the list of repositories
-Click on Maven Group
-Select the activiti repository from the Available list and move it to the Members list
-Scroll down and save
+We will not import this project to Jenkins X. We want to make sure that we have all our services set up first.
 
-Go back to Jenkins -> <Your User> -> ttc-connectors-dummytwitter -> develop
-Hit Build Now
 
----- While you wait for the pipeline to finish (it takes around 7 minutes ) you can fork and clone the other projects --- 
+## Single Entrypoint ->  Gateway
 
-From the terminal you can execute:
-> jx get activities -w -> to watch what Jenkins X is doing
+As mentioned before our Gateway component will be the single entrypoint for our services' clients. We will start by importing the Gateway project into Jenkins X and then we will add our services which implement our scenario. We want to provide a single entry point and service discovery for all our services in our infrastructure. This Service is a simple Spring Boot 2 application built using the [Spring Cloud Gateway Starter]() and it is using the Spring Cloud Kubernetes Discovery project to figure out which services are being deployed into the Kubernetes namespace where our application live.
+
+- Switch to the Dev environment in Jenkins X by
+  > jx env dev
+
+- Fork [http://github.com/activiti/ttc-infra-gateway](http://github.com/activiti/ttc-infra-gateway)
+- Clone your fork inside the **workshop/** directory
+  > git clone http://github.com/<your user>/ttc-infra-gateway
+- Import project into Jenkins X:
+  > jx import --branches "develop|PR-.*|feature.*"
+
+- Verify in Jenkins UI that the project was imported and the pipeline is running (jx get urls -> to retrieve the URLs again)
+
+
+
+Once the Pipeline is finished and the service promoted to staging, you should be able to access the following URL (which you can obtain by doing jx get apps)
+
+> curl http://<Gateway App URL>/campaigns
+
+Also, you can access to:
+
+> curl http://<Gateway App URL>/actuator/gateway/routes
+
+Which shows the available registered services inside the gateway. At this point there shouldn't be any service registered.
+
+You can easily tail the logs of your service by executing:
+> jx logs
+
+You can also use **kubectl** to check that your Pods, Deployments and Services are up:
+> kubectl get pods
+> kubectl get services
+> kubectl get deployments
+
+All the Deployments are configured to have a single replica for each service so you should see 1/1 pod started.
+
+## Our First Service - Dummy Social Media Feed
+
+This service emulates an internal service that will connect with an external Social Media feed such as Twitter. We wanted to make sure that we have a Dummy Service to be able to control the feed and the content for testing purposes. This service, consume data from the external stream and push it to RabbitMQ (you can use Kafka, ActiveMQ or other binders) via Spring Cloud Streams for other service to consume each tweet in an Async fashion.
+
+
+- Fork [http://github.com/activiti/ttc-connectors-dummytwitter](http://github.com/activiti/ttc-connectors-dummytwitter)
+- Clone it inside the **workshop/** directory
+  > git clone http://github.com/<your user>/ttc-infra-gateway
+
+- Import into Jenkins X:
+  > jx import --branches "develop|PR-.*|feature.*"
+
+- Go to Jenkins X and check that the new project is registered and being built (jx get urls -> to retrieve the URLs again)
+
+
+The build should fail at this point, and this is because we need to configure Nexus to pick up other Maven repositories to download some dependencies 3rd Party dependencies which are not hosted in Maven Central or Spring Repositories (which are included by default).
+
+
+### Configuring nexus to have custom repositories
+- Get Nexus URL (in **dev** environment)
+  > jx get urls
+
+- Login with admin/<jenkinsx pass>
+- Click in the Server Administration and Configuration menu (Gear)
+- Click on Maven2 (Proxy)
+- Enter the following information:
+  - Name: activiti
+  - Version Policy: Mixed
+  - URL: https://artifacts.alfresco.com/nexus/content/repositories/activiti-snapshots/
+- Scroll Down and Create Repository
+- With the repository created you need to add it to the Maven Group (From the list of repositories
+- Click on Maven Group
+- Select the activiti repository from the Available list and move it to the Members list
+- Scroll down and save
+
+Now we should be able to build our service.
+- Go back to Jenkins -> <Your User> -> ttc-connectors-dummytwitter -> develop
+- Hit Build Now
+
+**Note: While you wait for the pipeline to finish (it takes around 7 minutes ) you can fork and clone the other projects**
+
+From the CLI you can execute:
+> jx get activities -w (-> to watch what Jenkins X is doing)
 > jx env -> select staging
 > kubectl get pods -> you should see your pod and the number of replicas
 NAME                                                      READY     STATUS    RESTARTS   AGE
 jx-staging-ttc-connectors-dummytwitter-<hash>   0/1       Running   3          8m
+
+
 > jx logs -> will tail the logs of our only service and it will reveal that the service is looking for RabbitMQ but rabbitMQ is not available
 
-Adding Dependencies to an Environment (RabbitMQ)
+## Adding Dependencies to an Environment (RabbitMQ)
+
+A very common scenario is when your service depends on a service provided by the infrastructure, such as a Database or a Message Broker.
+For such cases, you will need to setup inside your environment these infrastructural (environment) services. You can do that by using HELM charts.
+For RabbitMQ you can search for the HELM chart and use it. In Jenkins X you do this by following a GitOps approach, meaning that changing the environment configuration is done by adding commits to a Git repository.
+
 
 From the terminal go to :
 cd ~/.jx/environments/<github user>/environment-<env name>-staging
@@ -100,87 +178,51 @@ After the Staging Environment pipeline finish, you should be able to do a > jx l
 Building a Marketing Campaign
 Fork github.com/activiti/ttc-rb-english-campaign
 Clone it inside your ttc/ directory
-Import it to Jenkins X: 
+Import it to Jenkins X:
 > jx import --branches "develop|PR-.*|feature.*"
 Check in Jenkins UI that the project was imported and the initial build is triggered
-From the terminal you can do jx logs and now you need to select which project do you want to tail. Remember always to be in jx env staging. 
-You can also check that your pod is running by doing “kubectl get pods” and check that you have 1/1 replicas running. 
+From the terminal you can do jx logs and now you need to select which project do you want to tail. Remember always to be in jx env staging.
+You can also check that your pod is running by doing “kubectl get pods” and check that you have 1/1 replicas running.
 Finally you can verify that the url returned by “jx get apps” can be opened in your browser and you get a hello message: “Hello from the Trending Topic Campaign Named: my-runtime-bundle with topic: activiti”
 
-This service is going to use RabbitMQ as well, but because we already set it up, there is nothing more required for this service to run. 
+This service is going to use RabbitMQ as well, but because we already set it up, there is nothing more required for this service to run.
 
 Time for some tests
 > jx get apps
- Copy the URL for the ttc-connectors-dummytwitter feed app: 
+ Copy the URL for the ttc-connectors-dummytwitter feed app:
 > curl <url>/feed
 Should return false -> meaning that the feed is turned off
 > curl -X POST <url>/feed/start
-This will start the feed. If you do 
+This will start the feed. If you do
 > jx logs -> select -> ttc-connectors-dummytwitter
 
-You will see the twitter feed being consumed and sent via Spring Cloud Streams. Every available Campaign (who matches some filters, for example the language filter) will be able to pick up the tweet for processing. 
+You will see the twitter feed being consumed and sent via Spring Cloud Streams. Every available Campaign (who matches some filters, for example the language filter) will be able to pick up the tweet for processing.
 
-You can stop the logs with CTRL+C and then 
+You can stop the logs with CTRL+C and then
 > jx logs -> select -> ttc-rb-english-campaign
 
 You will see tweets being consumed. Then you can stop the feed while we import more projects:
 
 > curl -X POST <url>/feed/stop
 
-Single Entrypoint ->  Gateway
 
-
-Switch to the Dev environment in Jenkins X by
-> jx env dev
-Fork github.com/activiti/ttc-infra-gateway
-Clone your fork inside the ttc directory
-Import project into Jenkins X:
-> jx import --branches "develop|PR-.*|feature.*"
-Verify in Jenkins UI that the project was imported and the pipeline is running
-
-Once the Pipeline is finished and the service promoted to staging, you should be able to access the following URL (which you can obtain by doing jx get apps)
-
-
-http://<Gateway App URL>/campaigns
-
-Also, you can access to: 
-
-
-http://<Gateway App URL>/actuator/gateway/routes
-
-
-Which shows the available registered services inside the gateway. 
-
-Now you should be able to access
-http://<Gateway App URL>/ttc-connectors-dummytwitter/
-
-And
-
-http://<Gateway App URL>/ttc-rb-english-campaign/
-
-Meaning that now, you can start the feed by pointing the curl command to:
-http://<Gateway App URL>/ttc-connectors-dummytwitter/feed/start
-
-And 
-
-http://<Gateway App URL>/ttc-connectors-dummytwitter/feed/stop
 
 Consuming Data
-Until this point we have a Service that produce data, in this case simulates a social media feed (ttc-connectors-dummytwitter). A service that process this data and defines the business logic on how to perform a marketing campaign (ttc-rb-english-campaign). Now we need a service that aggregates the data generated by multiple campaigns and allows us to consume that data without affecting the performance of each of the individual campaigns. 
+Until this point we have a Service that produce data, in this case simulates a social media feed (ttc-connectors-dummytwitter). A service that process this data and defines the business logic on how to perform a marketing campaign (ttc-rb-english-campaign). Now we need a service that aggregates the data generated by multiple campaigns and allows us to consume that data without affecting the performance of each of the individual campaigns.
 This service is called Query Service and in order to get it up and running we will follow the same approach as before:
 Fork github.com/activiti/ttc-query-campaign
 Clone your fork inside the ttc directory
 Import project into Jenkins X:
 > jx import --branches "develop|PR-.*|feature.*"
 Verify in Jenkins UI that the project was imported and the pipeline is running
- 
 
-At this point, when the pipeline finishes you should be able to query generic information about how many tweets are being processed (in-flight), how many were discarded and how many matched with the campaign and were ranked. 
+
+At this point, when the pipeline finishes you should be able to query generic information about how many tweets are being processed (in-flight), how many were discarded and how many matched with the campaign and were ranked.
 
 In-flight processes analyzing tweets
 curl http://<Gateway App URL>/ttc-rb-english-campaign/v1/process-instances/
 
-Domain specific data for the campaign, only the tweets that have matched with the campaign. 
+Domain specific data for the campaign, only the tweets that have matched with the campaign.
 
 curl http://<Gateway App URL>/ttc-rb-english-campaign/processed/activiti
 
