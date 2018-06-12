@@ -1,4 +1,14 @@
-# Workshop Recommended Steps
+# Cloud Native in Kubernetes Workshop
+
+Welcome to the Cloud Native Workshop in Kubernetes using some of the Activiti Cloud main building Blocks. We are going to cover an scenario about Marketing Campagins consuming Social Media Feeds. 
+
+![Scenario](/scenario.png)
+
+# Index
+- [Jenkins X](#Jenkins-x)
+- [Forking the Projects](#Fork-TTC-*-Projects)
+- [Single-Entrypoint](#Single-Entrypoint-(Gateway))
+
 You need to have Jenkins X installed in order to accelerate the deployment of your services into a Kubernetes Cluster. You can definitely achieve the same results without Jenkins X, but the HELM Charts and Kubernetes Descriptors for the Trending Topic Campaign Project were created using Jenkins X.
 
 ## Jenkins X
