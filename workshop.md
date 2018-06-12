@@ -5,7 +5,7 @@ Welcome to the Cloud Native Workshop in Kubernetes using some of the Activiti Cl
 ![Scenario](/scenario.png)
 
 # Index
-- [Jenkins X](#Jenkins-x)
+- [Jenkins X](#Jenkins-X)
 - [Repositories](#Repositories)
 - [Single Entrypoint](#Single-Entrypoint)
 
