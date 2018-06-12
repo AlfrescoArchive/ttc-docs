@@ -58,6 +58,10 @@ As any application we will end up having a Front End that is going to interact w
 - go into the ttc-dashboard-ui directory and execute
   - npm install
   - npm start
+  - vi proxy.conf.json 
+``` 
+    "target": "YOUR CLUSTER URL GOES HERE",
+```
 
 We will not import this project to Jenkins X. We want to make sure that we have all our services set up first.
 
