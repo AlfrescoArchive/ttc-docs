@@ -4,7 +4,7 @@ You need to have Jenkins X installed in order to accelerate the deployment of yo
 ## Jenkins X
 If you don't have a Kubernetes Cluster with Jenkins X installed on it you can create one with:
 
-> jx create cluster gke --kubernetes-version=1.9
+> jx create cluster gke --kubernetes-version=1.9 --verbose
 
   - Select **europe-west1-c** [19]
   - Select **n1-standard-2**
