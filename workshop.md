@@ -61,7 +61,7 @@ As any application we will end up having a Front End that is going to interact w
 
 We will not import this project to Jenkins X. We want to make sure that we have all our services set up first.
 
-## Single Entrypoint (Gateway)
+## Single Entrypoint (Gateway)
 
 As mentioned before our Gateway component will be the single entrypoint for our services' clients. We will start by importing the Gateway project into Jenkins X and then we will add our services which implement our scenario. We want to provide a single entry point and service discovery for all our services in our infrastructure. This Service is a simple Spring Boot 2 application built using the [Spring Cloud Gateway Starter]() and it is using the Spring Cloud Kubernetes Discovery project to figure out which services are being deployed into the Kubernetes namespace where our application live.
 
@@ -81,11 +81,11 @@ As mentioned before our Gateway component will be the single entrypoint for our 
 
 Once the Pipeline is finished and the service promoted to staging, you should be able to access the following URL (which you can obtain by doing jx get apps)
 
-> curl http://{Gateway App URL}/campaigns
+> curl "$(jx get apps | grep ttc-infra-gateway | awk '{print $4"/campaigns"}')"
 
 Also, you can access to:
 
-> curl http://{Gateway App URL}/actuator/gateway/routes
+> curl "$(jx get apps | grep ttc-infra-gateway | awk '{print $4"/actuator/gateway/routes"}')" | json_pp
 
 Which shows the available registered services inside the gateway. At this point there shouldn't be any service registered.
 
@@ -94,7 +94,9 @@ You can easily tail the logs of your service by executing:
 
 You can also use **kubectl** to check that your Pods, Deployments and Services are up:
 > kubectl get pods
+
 > kubectl get services
+
 > kubectl get deployments
 
 All the Deployments are configured to have a single replica for each service so you should see 1/1 pod started.
