@@ -6,12 +6,12 @@ Welcome to the Cloud Native Workshop in Kubernetes using some of the Activiti Cl
 
 # Index
 - [Jenkins X](#Jenkins-x)
-- [Forking the Projects](#Fork-TTC-*-Projects)
-- [Single-Entrypoint](#Single-Entrypoint-(Gateway))
+- [Repositories](#Repositories)
+- [Single Entrypoint](#Single-Entrypoint)
 
 You need to have Jenkins X installed in order to accelerate the deployment of your services into a Kubernetes Cluster. You can definitely achieve the same results without Jenkins X, but the HELM Charts and Kubernetes Descriptors for the Trending Topic Campaign Project were created using Jenkins X.
 
-## Jenkins X
+# Jenkins X
 If you don't have a Kubernetes Cluster with Jenkins X installed on it you can create one with:
 
 > jx create cluster gke --kubernetes-version=1.9 --verbose
@@ -45,7 +45,7 @@ Use the following command to check and select in which environment you want to b
 
 For importing new projects we will need to be in the **dev** environment.
 
-# Fork TTC-* Projects
+# Repositories
 
 Repositories [https://github.com/activiti/?q=ttc-](https://github.com/activiti/?q=ttc-)
 
@@ -58,7 +58,7 @@ We will start by forking and cloning the following two projects:
 
 Before cloning anything, we recommend to create a **workshop/** directory somewhere in your laptop/pc.
 
-## Single Entrypoint (Gateway)
+# Single Entrypoint
 
 As mentioned before our Gateway component will be the single entrypoint for our services' clients. We will start by importing the Gateway project into Jenkins X and then we will add our services which implement our scenario. We want to provide a single entry point and service discovery for all our services in our infrastructure. This Service is a simple Spring Boot 2 application built using the [Spring Cloud Gateway Starter]() and it is using the Spring Cloud Kubernetes Discovery project to figure out which services are being deployed into the Kubernetes namespace where our application live.
 
