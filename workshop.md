@@ -5,8 +5,9 @@ You need to have Jenkins X installed in order to accelerate the deployment of yo
 If you don't have a Kubernetes Cluster with Jenkins X installed on it you can create one with:
 
 > jx create cluster gke --kubernetes-version=1.9
-  > europe-west1c
-  > n1-standard-2
+
+  - Select **europe-west1c**
+  - Select **n1-standard-2**
 
 This will create a new Kubernetes Cluster inside GKE. Notice that you  need to have the Kubernetes Engine enabled into your account in order to use it.
 - Make sure that you sign in with the google account where you have your kubernetes cluster.
