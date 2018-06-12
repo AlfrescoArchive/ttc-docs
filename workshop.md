@@ -280,7 +280,9 @@ This service is implementing the Business Logic which defines how the campaign s
 
 This service was designed to be the Command aspect of the CQRS (Command / Query Responsibility Segregation) pattern. This service is in charge of executing business logic for every tweet that we receive.
 
-@TODO: add images for business processes
+We are using the Activiti Runtime Process Engine to automate the execution of these business processes. 
+
+![Campaign Business Process](/campaign-bpmn-process.png)
 
 
 - Fork [http://github.com/activiti/ttc-rb-english-campaign](http://github.com/activiti/ttc-rb-english-campaign)
@@ -376,3 +378,16 @@ Import them all to Jenkins X
 > jx import --branches "develop|PR-.*|feature.*"
 
 Wait for the pipelines to finish and now you are ready to check the UI, it should show the campaign deployed in the main screen and all the Services should be green. You can also turn on the Dummy Twitter Feed and see how the campaign match, process, rank and reward engaged users.
+
+
+# Next Steps
+
+- All Services are already built in with Zipkin for Tracing. So configuring Zipking should be matter of adding the Zipkin Helm Chart
+- Single Sign On: maybe using Keycloak Helm Chart
+- Monitoring with the ELK Stack, all the services are already including Spring Cloud Sleuth
+- Istio Service Mesh and rolling upgrades for campaigns
+- Spring Application Monitoring with Spring Cloud Kubernetes integration
+- Reactive UI with Webflux in the Query Service (half implemented already)
+
+
+
