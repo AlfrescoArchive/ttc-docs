@@ -9,8 +9,9 @@ If you don't have a Kubernetes Cluster with Jenkins X installed on it you can cr
   - Select **europe-west1-c** [19]
   - Select **n1-standard-2**
 
-Note: In case you have errors about gcloud, please install google cloud sdk from:
+Note (1): In case you have errors about gcloud, please install google cloud sdk from:
 https://cloud.google.com/sdk/docs/
+Note (2): If you want to acess to your google cloud console go here https://console.cloud.google.com/home/dashboard
 
 This will create a new Kubernetes Cluster inside GKE. Notice that you  need to have the Kubernetes Engine enabled into your account in order to use it.
 - Make sure that you sign in with the google account where you have your kubernetes cluster.
