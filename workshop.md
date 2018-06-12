@@ -1,13 +1,17 @@
 # Cloud Native in Kubernetes Workshop
 
+
 Welcome to the Cloud Native Workshop in Kubernetes using some of the Activiti Cloud main building Blocks. We are going to cover an scenario about Marketing Campagins consuming Social Media Feeds. 
 
-![Scenario](/scenario.png)
-
-# Index
 - [Jenkins X](#jenkins-X)
 - [Repositories](#repositories)
 - [Single Entrypoint](#single-entrypoint)
+- [Front End](#front-end)
+
+@TODO: something here
+
+![Scenario](/scenario.png)
+
 
 You need to have Jenkins X installed in order to accelerate the deployment of your services into a Kubernetes Cluster. You can definitely achieve the same results without Jenkins X, but the HELM Charts and Kubernetes Descriptors for the Trending Topic Campaign Project were created using Jenkins X.
 
@@ -53,14 +57,52 @@ Repositories [https://github.com/activiti/?q=ttc-](https://github.com/activiti/?
 The main idea to fork the projects is to be able to change them by sending PRs or just pushing to these repositories that will be monitored by Jenkins X.
 
 We will start by forking and cloning the following two projects:
-- ttc-infra-gateway -> Gateway
 - ttc-dashboard-ui -> Front End
+- ttc-infra-gateway -> Gateway
+
 
 Before cloning anything, we recommend to create a **workshop/** directory somewhere in your laptop/pc.
 
+# Front End
+
+As any application we will end up having a Front End that is going to interact with a bunch of services. This Application will need to know where the services are and we are going to start simply by forking the Github repository, and running the Front End application so we can track when our services are being deployed.
+
+- Fork [http://github.com/activiti/ttc-dashboard-ui](http://github.com/activiti/ttc-dashboard-ui)
+- Clone to your local environment inside the **workshop/** directory
+
+## (Optional): You can run the Front End Application locally
+
+- go into the ttc-dashboard-ui directory and execute
+  - npm install
+  - npm start
+  - Edit proxy.conf.json 
+``` 
+    "target": "YOUR GATEWAY URL GOES HERE",
+```
+Note: If you don't have node installed, please install it from here https://nodejs.org/en/
+
+Once 'npm start' finishes you can access the application by pointing to [http://localhost:8080](http://localhost:8080)
+
+## Alternative You can import the project to Jenkins X
+You can import the project to run it inside the Kubernetes Cluster along your services. 
+
+Just import it into Jenkins X by executing:
+
+ > jx import --branches "develop|PR-.*|feature.*"
+ 
+ 
+ In order to access to the app you can do 
+ > jx get apps 
+ 
+ Then copy the URL from **ttc-dashboard-ui**  . 
+ 
+ You can monitor the pipeline which will build and deploy your project to Kubernetes by opening the Jenkins UI by typing:
+ > jx console
+ 
+
 # Single Entrypoint
 
-As mentioned before our Gateway component will be the single entrypoint for our services' clients. We will start by importing the Gateway project into Jenkins X and then we will add our services which implement our scenario. We want to provide a single entry point and service discovery for all our services in our infrastructure. This Service is a simple Spring Boot 2 application built using the [Spring Cloud Gateway Starter]() and it is using the Spring Cloud Kubernetes Discovery project to figure out which services are being deployed into the Kubernetes namespace where our application live.
+As mentioned before our Gateway component will be the single entrypoint for our services' clients. We will start by importing the Gateway project into Jenkins X and then we will add our services which implement our scenario. We want to provide a single entry point and service discovery for all our services in our infrastructure. This Service is a simple Spring Boot 2 application built using the [Spring Cloud Gateway Starter](https://cloud.spring.io/spring-cloud-gateway/) and it is using the [Spring Cloud Kubernetes Discovery](https://github.com/spring-cloud-incubator/spring-cloud-kubernetes) project to figure out which services are being deployed into the Kubernetes namespace where our application live.
 
 - Switch to the Dev environment in Jenkins X by
   > jx env dev
@@ -72,7 +114,7 @@ As mentioned before our Gateway component will be the single entrypoint for our 
 - Import project into Jenkins X:
   > jx import --branches "develop|PR-.*|feature.*"
 
-- Verify in Jenkins UI that the project was imported and the pipeline is running (jx get urls -> to retrieve the URLs again)
+- Verify in Jenkins UI that the project was imported and the pipeline is running (jx console)
 
 
 
@@ -106,23 +148,7 @@ You can also use **kubectl** to check that your Pods, Deployments and Services a
 
 All the Deployments are configured to have a single replica for each service so you should see 1/1 pod started.
 
-## Front End
 
-As any application we will end up having a Front End that is going to interact with a bunch of services. This Application will need to know where the services are and we are going to start simply by forking the Github repository, and running the Front End application locally so we can track when our services are being deployed.
-
-
-- Fork [http://github.com/activiti/ttc-dashboard-ui](http://github.com/activiti/ttc-dashboard-ui)
-- Clone to your local environment inside the **workshop/** directory
-- go into the ttc-dashboard-ui directory and execute
-  - npm install
-  - npm start
-  - vi proxy.conf.json 
-``` 
-    "target": "YOUR CLUSTER URL GOES HERE",
-```
-Note: If you don't have node installed, please install it from here https://nodejs.org/en/
-
-We will not import this project to Jenkins X. We want to make sure that we have all our services set up first.
 
 
 ## Our First Service - Dummy Social Media Feed
