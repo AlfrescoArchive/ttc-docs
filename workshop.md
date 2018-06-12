@@ -12,6 +12,7 @@ If you don't have a Kubernetes Cluster with Jenkins X installed on it you can cr
 Note (1): In case you have errors about gcloud, please install google cloud sdk from:
 https://cloud.google.com/sdk/docs/
 Note (2): If you want to acess to your google cloud console go here https://console.cloud.google.com/home/dashboard
+Note (3): In case you have errors about helm, install it from the helm 2.8.2 repository : https://github.com/kubernetes/helm/releases/tag/v2.8.2
 
 This will create a new Kubernetes Cluster inside GKE. Notice that you  need to have the Kubernetes Engine enabled into your account in order to use it.
 - Make sure that you sign in with the google account where you have your kubernetes cluster.
