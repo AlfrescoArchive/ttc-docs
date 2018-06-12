@@ -13,6 +13,7 @@ Welcome to the Cloud Native Workshop in Kubernetes using some of the Activiti Cl
 - [Building a Marketing Campaign](#building-a-marketing-campaign)
 - [Consuming Data](#consuming-data)
 - [System to System Integration](#system-to-system-integrations)
+- [Next Steps](#next-steps)
 
 For more details about the scenario you can look at the [Scenario document](scenario.md)
 
