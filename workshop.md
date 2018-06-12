@@ -100,6 +100,7 @@ As any application we will end up having a Front End that is going to interact w
 ``` 
     "target": "YOUR CLUSTER URL GOES HERE",
 ```
+Note: If you don't have node installed, please install it from here https://nodejs.org/en/
 
 We will not import this project to Jenkins X. We want to make sure that we have all our services set up first.
 
