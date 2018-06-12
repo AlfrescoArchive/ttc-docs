@@ -5,9 +5,9 @@ Welcome to the Cloud Native Workshop in Kubernetes using some of the Activiti Cl
 ![Scenario](/scenario.png)
 
 # Index
-- [Jenkins X](#Jenkins-X)
-- [Repositories](#Repositories)
-- [Single Entrypoint](#Single-Entrypoint)
+- [Jenkins X](#jenkins-X)
+- [Repositories](#repositories)
+- [Single Entrypoint](#single-entrypoint)
 
 You need to have Jenkins X installed in order to accelerate the deployment of your services into a Kubernetes Cluster. You can definitely achieve the same results without Jenkins X, but the HELM Charts and Kubernetes Descriptors for the Trending Topic Campaign Project were created using Jenkins X.
 
@@ -80,9 +80,17 @@ Once the Pipeline is finished and the service promoted to staging, you should be
 
 > curl http://{Gateway App URL}/campaigns
 
+or
+
+> curl "$(jx get apps | grep ttc-infra-gateway | awk '{print $4"/campaigns"}')" | json_pp
+
 Also, you can access to:
 
 > curl http://{Gateway App URL}/actuator/gateway/routes
+
+or
+
+> curl "$(jx get apps | grep ttc-infra-gateway | awk '{print $4"/actuator/gateway/routes"}')" | json_pp
 
 Which shows the available registered services inside the gateway. At this point there shouldn't be any service registered.
 
@@ -91,7 +99,9 @@ You can easily tail the logs of your service by executing:
 
 You can also use **kubectl** to check that your Pods, Deployments and Services are up:
 > kubectl get pods
+
 > kubectl get services
+
 > kubectl get deployments
 
 All the Deployments are configured to have a single replica for each service so you should see 1/1 pod started.
