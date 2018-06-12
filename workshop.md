@@ -61,7 +61,7 @@ As any application we will end up having a Front End that is going to interact w
 
 We will not import this project to Jenkins X. We want to make sure that we have all our services set up first.
 
-## Single Entrypoint (Gateway)
+## Single Entrypoint (Gateway)
 
 As mentioned before our Gateway component will be the single entrypoint for our services' clients. We will start by importing the Gateway project into Jenkins X and then we will add our services which implement our scenario. We want to provide a single entry point and service discovery for all our services in our infrastructure. This Service is a simple Spring Boot 2 application built using the [Spring Cloud Gateway Starter]() and it is using the Spring Cloud Kubernetes Discovery project to figure out which services are being deployed into the Kubernetes namespace where our application live.
 
