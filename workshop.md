@@ -43,27 +43,10 @@ Repositories [https://github.com/activiti/?q=ttc-](https://github.com/activiti/?
 The main idea to fork the projects is to be able to change them by sending PRs or just pushing to these repositories that will be monitored by Jenkins X.
 
 We will start by forking and cloning the following two projects:
-- ttc-dashboard-ui -> Front End
 - ttc-infra-gateway -> Gateway
+- ttc-dashboard-ui -> Front End
 
 Before cloning anything, we recommend to create a **workshop/** directory somewhere in your laptop/pc.
-
-## Front End
-
-As any application we will end up having a Front End that is going to interact with a bunch of services. This Application will need to know where the services are and we are going to start simply by forking the Github repository, and running the Front End application locally so we can track when our services are being deployed.
-
-
-- Fork [http://github.com/activiti/ttc-dashboard-ui](http://github.com/activiti/ttc-dashboard-ui)
-- Clone to your local environment inside the **workshop/** directory
-- go into the ttc-dashboard-ui directory and execute
-  - npm install
-  - npm start
-  - vi proxy.conf.json 
-``` 
-    "target": "YOUR CLUSTER URL GOES HERE",
-```
-
-We will not import this project to Jenkins X. We want to make sure that we have all our services set up first.
 
 ## Single Entrypoint (Gateway)
 
@@ -102,6 +85,24 @@ You can also use **kubectl** to check that your Pods, Deployments and Services a
 > kubectl get deployments
 
 All the Deployments are configured to have a single replica for each service so you should see 1/1 pod started.
+
+## Front End
+
+As any application we will end up having a Front End that is going to interact with a bunch of services. This Application will need to know where the services are and we are going to start simply by forking the Github repository, and running the Front End application locally so we can track when our services are being deployed.
+
+
+- Fork [http://github.com/activiti/ttc-dashboard-ui](http://github.com/activiti/ttc-dashboard-ui)
+- Clone to your local environment inside the **workshop/** directory
+- go into the ttc-dashboard-ui directory and execute
+  - npm install
+  - npm start
+  - vi proxy.conf.json 
+``` 
+    "target": "YOUR CLUSTER URL GOES HERE",
+```
+
+We will not import this project to Jenkins X. We want to make sure that we have all our services set up first.
+
 
 ## Our First Service - Dummy Social Media Feed
 
