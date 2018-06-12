@@ -5,10 +5,16 @@ Welcome to the Cloud Native Workshop in Kubernetes using some of the Activiti Cl
 
 - [Jenkins X](#jenkins-X)
 - [Repositories](#repositories)
-- [Single Entrypoint](#single-entrypoint)
 - [Front End](#front-end)
+- [Single Entrypoint](#single-entrypoint)
+- [Our First Service](#our-first-service)
+  - [Configuring Nexus](#configuring-nexus)
+- [Adding Environment Dependencies](#adding-environment-dependencies)
+- [Building a Marketing Campaign](#building-a-marketing-campaign)
+- [Consuming Data](#consuming-data)
+- [System to System Integration](#system-to-system-integrations)
 
-@TODO: something here
+For more details about the scenario you can look at the [Scenario document](scenario.md)
 
 ![Scenario](/scenario.png)
 
@@ -16,13 +22,14 @@ Welcome to the Cloud Native Workshop in Kubernetes using some of the Activiti Cl
 You need to have Jenkins X installed in order to accelerate the deployment of your services into a Kubernetes Cluster. You can definitely achieve the same results without Jenkins X, but the HELM Charts and Kubernetes Descriptors for the Trending Topic Campaign Project were created using Jenkins X.
 
 # Jenkins X
-If you don't have a Kubernetes Cluster with Jenkins X installed on it you can create one with:
+If you don't have a Kubernetes Cluster with [Jenkins X](http://jenkinsx.io) installed on it you can create one with:
 
 > jx create cluster gke --kubernetes-version=1.9 --verbose
 
   - Select **europe-west1-c** [19]
   - Select **n1-standard-2**
 
+Note: Look at [Jenkins X](http://jenkinsx.io) website for more information about how to install and create K8s clusters in other Cloud Providers
 Note (1): In case you have errors about gcloud, please install google cloud sdk from:
 https://cloud.google.com/sdk/docs/
 Note (2): If you want to acess to your google cloud console go here https://console.cloud.google.com/home/dashboard
@@ -149,9 +156,7 @@ You can also use **kubectl** to check that your Pods, Deployments and Services a
 All the Deployments are configured to have a single replica for each service so you should see 1/1 pod started.
 
 
-
-
-## Our First Service - Dummy Social Media Feed
+# Our First Service
 
 This service emulates an internal service that will connect with an external Social Media feed such as Twitter. We wanted to make sure that we have a Dummy Service to be able to control the feed and the content for testing purposes. This service, consume data from the external stream and push it to RabbitMQ (you can use Kafka, ActiveMQ or other binders) via Spring Cloud Streams for other service to consume each tweet in an Async fashion.
 
@@ -169,7 +174,8 @@ This service emulates an internal service that will connect with an external Soc
 The build should fail at this point, and this is because we need to configure Nexus to pick up other Maven repositories to download some dependencies 3rd Party dependencies which are not hosted in Maven Central or Spring Repositories (which are included by default).
 
 
-### Configuring nexus to have custom repositories
+## Configuring Nexus
+
 - Get Nexus URL (in **dev** environment)
   > jx get urls
 
@@ -206,7 +212,7 @@ jx-staging-ttc-connectors-dummytwitter-{hash}   0/1       Running   3          8
 
 > jx logs -> will tail the logs of our only service and it will reveal that the service is looking for RabbitMQ but rabbitMQ is not available
 
-## Adding Dependencies to an Environment (RabbitMQ)
+# Adding Environment Dependencies
 
 A very common scenario is when your service depends on a service provided by the infrastructure, such as a Database or a Message Broker.
 For such cases, you will need to setup inside your environment these infrastructural (environment) services. You can do that by using HELM charts.
@@ -306,7 +312,7 @@ You should be able to access both URLs via your Browser.
 This service is going to use RabbitMQ as well, but because we already set it up, there is nothing more required for this service to run.
 
 
-### Time for some tests
+## Time for some tests
 > jx get apps
 
 - Copy the URL for the **ttc-connectors-dummytwitter** feed app:
@@ -353,9 +359,12 @@ Domain specific data for the campaign, only the tweets that have matched with th
 > curl http://{Gateway App URL}/ttc-rb-english-campaign/processed/activiti
 
 
-# System to System Integrations (Service Orchestration)
+# System to System Integrations
 
-Finally, as you will see when you try to consume data from the query service none of the processes are finishing, because they need other services to complete all the operations:
+As in every large scenario you will required some kind of Service Orchestration and Choreography. 
+Right now all the Service connectors to external system are not present, so we need to plug them in. 
+These microservices represent System to System integrations that will be orchestrated by the Marketing Campaigns buiness needs.
+As you will see, when you try to consume data from the query service none of the processes are finishing, because they need other services to complete all the operations:
 
 - Fork Rewards Connector [http://github.com/activiti/ttc-connectors-reward](http://github.com/activiti/ttc-connectors-reward)
 - Fork Ranking Connector [http://github.com/activiti/ttc-connectors-ranking](http://github.com/activiti/ttc-connectors-ranking)
