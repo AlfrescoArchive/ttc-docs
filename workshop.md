@@ -148,11 +148,15 @@ Now we should be able to build our service.
 
 From the CLI you can execute:
 > jx get activities -w (-> to watch what Jenkins X is doing)
+
 > jx env -> select staging
+
 > kubectl get pods -> you should see your pod and the number of replicas
+
+```
 NAME                                                      READY     STATUS    RESTARTS   AGE
 jx-staging-ttc-connectors-dummytwitter-{hash}   0/1       Running   3          8m
-
+```
 
 > jx logs -> will tail the logs of our only service and it will reveal that the service is looking for RabbitMQ but rabbitMQ is not available
 
