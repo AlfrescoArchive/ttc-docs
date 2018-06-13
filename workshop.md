@@ -2,7 +2,7 @@
 
 In this workshop we will be looking at an scenario that illustrate the journey that you will need to experience if you are planning to build using a cloud native architecture which you want to run on Kubernetes. 
 
-Slides: [Slides in SlideShare] (https://www.slideshare.net/salaboy/cloud-native-java-in-kubernetes)
+Slides: [Slides in SlideShare](https://www.slideshare.net/salaboy/cloud-native-java-in-kubernetes)
 
 This workshop relies on the following technology stack: 
 - Spring Boot 2
