@@ -1,7 +1,21 @@
 # Cloud Native in Kubernetes Workshop
 
+In this workshop we will be looking at an scenario that illustrate the journey that you will need to experience if you are planning to build using a cloud native architecture which you want to run on Kubernetes. 
 
-Welcome to the Cloud Native Workshop in Kubernetes using some of the Activiti Cloud main building Blocks. We are going to cover an scenario about Marketing Campagins consuming Social Media Feeds. 
+This workshop relies on the following technology stack: 
+- Spring Boot 2
+- Spring Cloud Finchley
+- Docker
+- Kubernetes
+
+We will be using [Jenkins X](http://jenkinsx.io) to accelerate the entire journey but it is not required to get all the services working. 
+
+This example was built as an Open Source Project to highlight the capabilities of Activiti OSS which is a Cloud Native Business Automation Suite. All the software is currently in Alpha stage and we are planning to release a Beta1 release at the end of June, early July. We would love to get your feedback once that release is out. It is important to understand that even the example was built to highlight some of the Activiti OSS project capabilities, it uses standard practices for Cloud Native Applications that can be reused in any project. We aim to help to reduce the time that Software Developers spend on this journey by sharing examples that you can use as baselines for your projects. 
+
+This example is not perfect in any way, but it is an evolving examples that we keep improving for each of our Activiti OSS releases. We use this example in a continuous deployment approach to test, validate and migration paths between releases. 
+
+Notice that with some work, you should be able to run this example in your local environment, but if you are going Cloud Native we totally recommend a real cluster. 
+
 
 - [Jenkins X](#jenkins-X)
 - [Repositories](#repositories)
@@ -19,10 +33,11 @@ For more details about the scenario you can look at the [Scenario document](scen
 
 ![Scenario](/scenario.png)
 
-
 You need to have Jenkins X installed in order to accelerate the deployment of your services into a Kubernetes Cluster. You can definitely achieve the same results without Jenkins X, but the HELM Charts and Kubernetes Descriptors for the Trending Topic Campaign Project were created using Jenkins X.
 
 # Jenkins X
+Follow the instructions to install Jenkins X (JX CLI) from their [getting started guide](https://jenkins-x.io/getting-started/install/).
+
 If you don't have a Kubernetes Cluster with [Jenkins X](http://jenkinsx.io) installed on it you can create one with:
 
 > jx create cluster gke --kubernetes-version=1.9 --verbose
@@ -39,7 +54,7 @@ Note (3): In case you have errors about helm, install it from the helm 2.8.2 rep
 This will create a new Kubernetes Cluster inside GKE. Notice that you  need to have the Kubernetes Engine enabled into your account in order to use it.
 - Make sure that you sign in with the google account where you have your kubernetes cluster.
 - Select your availability zone, Then accept all the defaults.
-- When the process ends, make sure that you record the password for Jenkins X admin user.
+- **When the process ends, make sure that you record the password for Jenkins X admin user.**
 
 When Jenkins X is installed you can use the following command to see all the Jenkins X installed services
 
@@ -67,7 +82,6 @@ The main idea to fork the projects is to be able to change them by sending PRs o
 We will start by forking and cloning the following two projects:
 - ttc-dashboard-ui -> Front End
 - ttc-infra-gateway -> Gateway
-
 
 Before cloning anything, we recommend to create a **workshop/** directory somewhere in your laptop/pc.
 
@@ -383,12 +397,14 @@ Wait for the pipelines to finish and now you are ready to check the UI, it shoul
 
 # Next Steps
 
+- You can add PostgreSQL and bind it to Query Service and Campaigns by uncommenting properties inside those projects
 - All Services are already built in with Zipkin for Tracing. So configuring Zipking should be matter of adding the Zipkin Helm Chart
 - Single Sign On: maybe using Keycloak Helm Chart
 - Monitoring with the ELK Stack, all the services are already including Spring Cloud Sleuth
 - Istio Service Mesh and rolling upgrades for campaigns
 - Spring Application Monitoring with Spring Cloud Kubernetes integration
 - Reactive UI with Webflux in the Query Service (half implemented already)
+- Adding Activiti Query GraphQL integration
 
 
 
