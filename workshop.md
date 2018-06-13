@@ -198,16 +198,17 @@ The build should fail at this point, and this is because we need to configure Ne
 
 - Login with admin/{jx pass}
 - Click in the Server Administration and Configuration menu (Gear)
-- Click on Maven2 (Proxy)
-- Enter the following information:
-  - Name: activiti
-  - Version Policy: Mixed
-  - URL: https://artifacts.alfresco.com/nexus/content/repositories/activiti-snapshots/
-- Scroll Down and Create Repository
+- Create new Repository
+  - Click on Maven2 (Proxy)
+  - Enter the following information:
+   - Name: activiti
+   - Version Policy: Mixed
+   - URL: https://artifacts.alfresco.com/nexus/content/repositories/activiti-snapshots/
+  - Scroll Down and Create Repository
 - With the repository created you need to add it to the Maven Group (From the list of repositories
 - Click on Maven Group
-- Select the activiti repository from the Available list and move it to the Members list
-- Scroll down and save
+  - Select the activiti repository from the Available list and move it to the Members list
+  - Scroll down and save
 
 Now we should be able to build our service.
 - Go back to Jenkins -> {Your User} -> ttc-connectors-dummytwitter -> develop
