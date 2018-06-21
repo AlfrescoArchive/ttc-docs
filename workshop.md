@@ -28,6 +28,7 @@ Notice that with some work, you should be able to run this example in your local
 - [Adding Environment Dependencies](#adding-environment-dependencies)
 - [Building a Marketing Campaign](#building-a-marketing-campaign)
 - [Consuming Data](#consuming-data)
+  - [Configuring PostgreSQL as Data Storage](#configuring-postgresql-as-data-storage)
 - [System to System Integration](#system-to-system-integrations)
 - [Next Steps](#next-steps)
 
