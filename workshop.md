@@ -372,12 +372,60 @@ At this point, when the pipeline finishes you should be able to query generic in
 
 
 In-flight processes analyzing tweets
-> curl http://{Gateway App URL}/ttc-rb-english-campaign/v1/process-instances/
+> curl http://{Gateway App URL}/ttc-query-campaign/v1/process-instances/
 
 Domain specific data for the campaign, only the tweets that have matched with the campaign.
 
-> curl http://{Gateway App URL}/ttc-rb-english-campaign/processed/activiti
+> curl http://{Gateway App URL}/ttc-query-campaign/processed/activiti
 
+## Configuring PostgreSQL as Data Storage
+By default the Query Service is using H2 as an In-Memory Database, but you can change this by uncommenting the Spring Data JPA properties inside the application.properties file:
+
+https://github.com/Activiti/ttc-query-campaign/blob/develop/src/main/resources/application.properties#L11
+
+Notice that the Chart also have the properties with the DB User and Password: 
+https://github.com/Activiti/ttc-query-campaign/blob/develop/charts/ttc-query-campaign/values.yaml#L18
+
+Once this is setup, the Service will expect to have a PostgreSQL DB inside the environment to work. In order to enable this, we will proceed in the same way as we did for adding RabbitMQ:
+
+When you installed Jenkins X, two environments and two repositories where created inside your Github accounts and cloned into your laptop/pc.  
+You can find these repositories under:
+**~/.jx/environments/{github user}/environment-{env name}-staging**
+Let's add RabbitMQ to the staging environment:
+
+> cd ~/.jx/environments/{github user}/environment-{env name}-staging
+> git pull -> to retrieve the latest changes from the staging environment
+
+Edit env/requirements.yaml and add append:
+```
+- name: postgresql
+  repository: https://kubernetes-charts.storage.googleapis.com
+  version: 0.11.0
+```
+
+Edit env/values.yaml and append:
+```
+postgresql:
+   postgresPassword: activiti
+```
+
+**Be careful with the spaces (it is a yaml file) and caps**
+Now let's apply the changes:
+
+- Check that the files were modified
+> git status -> you should see two files changed
+
+- Do:
+> git add .
+
+- Then:
+> git commit -m “adding rabbitmq to staging env”
+
+- Finally:
+> git push
+
+You can check now inside the Jenkins UI that the staging environment pipeline has been triggered.
+Once this is done and the pipeline finish, you can check the logs again for the ttc-query-campaign service to see that it is using the PostgreSQL instance that is provided by the environment. 
 
 # System to System Integrations
 
