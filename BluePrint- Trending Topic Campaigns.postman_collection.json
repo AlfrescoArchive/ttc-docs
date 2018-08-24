@@ -202,24 +202,6 @@
 					"response": []
 				},
 				{
-					"name": "Get InFlight Tweets Copy",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{kcAccessToken}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": "{{gateway}}/ttc-query-campaign/v1/inflight/activiti"
-					},
-					"response": []
-				},
-				{
 					"name": "Get Matching Tweets",
 					"request": {
 						"method": "GET",
