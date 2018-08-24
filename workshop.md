@@ -125,23 +125,92 @@ Just import it into Jenkins X by executing:
  > jx console
  
 
-# Single Entrypoint
+# Single Entrypoint and Authentication
 
-As mentioned before our Gateway component will be the single entrypoint for our services' clients. We will start by importing the Gateway project into Jenkins X and then we will add our services which implement our scenario. We want to provide a single entry point and service discovery for all our services in our infrastructure. This Service is a simple Spring Boot 2 application built using the [Spring Cloud Gateway Starter](https://cloud.spring.io/spring-cloud-gateway/) and it is using the [Spring Cloud Kubernetes Discovery](https://github.com/spring-cloud-incubator/spring-cloud-kubernetes) project to figure out which services are being deployed into the Kubernetes namespace where our application live.
+As mentioned before our Gateway component will be the single entrypoint for our services' clients. We will start by importing the Gateway project into Jenkins X and then we will add our services which implement our scenario. We want to provide a single entry point and service discovery for all our services in our infrastructure. This Service is a simple Spring Boot 2 application built using the [Spring Cloud Gateway Starter](https://cloud.spring.io/spring-cloud-gateway/) and it is using the [Spring Cloud Kubernetes Discovery](https://github.com/spring-cloud-incubator/spring-cloud-kubernetes) project to figure out which services are being deployed into the Kubernetes namespace where our applications live.
 
-- Switch to the Dev environment in Jenkins X by
-  > jx env dev
+We've a convenient activiti helm chart that we call `infrastructure` that sets up both the gateway and also keycloak. We'll use keycloak for authentication and authorisation, so that we know who is logging and that they're only doing what they are allowed to do.
 
-- Fork [http://github.com/activiti/ttc-infra-gateway](http://github.com/activiti/ttc-infra-gateway)
-- Clone your fork inside the **workshop/** directory
-  > git clone http://github.com/{your user}/ttc-infra-gateway
+Let's add `infrastructure` to the staging environment:
 
-- Import project into Jenkins X:
-  > jx import --branches "develop|PR-.*|feature.*"
+> cd ~/.jx/environments/{github user}/environment-{env name}-staging
+> git pull -> to retrieve the latest changes from the staging environment
 
-- Verify in Jenkins UI that the project was imported and the pipeline is running (jx console)
+Edit Makefile and within the series of `helm add` steps under `build: clean`, add the following line:
+```
+	helm repo add activiti-cloud-charts https://activiti.github.io/activiti-cloud-charts/
+```
+
+Edit env/requirements.yaml and add append:
+```
+- name: infrastructure
+  repository: https://activiti.github.io/activiti-cloud-charts/
+  version: 0.2.0
+```
+
+Now open env/values.yaml. Inside here, near the top, you'll find an item like:
+
+```
+expose:
+  config:
+    domain: <DOMAIN>
+    exposer: Ingress
+    exposer: LoadBalancer
+```
+You'll need to note the value of <DOMAIN> and replace it in the next step.
+
+Edit env/values.yaml and append the below, replacing the value of <DOMAIN>:
+
+```
+global:
+  keycloak:
+    url: "http://activiti-keycloak.jx-staging.<DOMAIN>/auth"
 
 
+infrastructure:
+  activiti-keycloak:
+    keycloak:
+      keycloak:
+        ingress:
+          enabled: true
+          path: /
+          hosts:
+            - "activiti-keycloak.jx-staging.<DOMAIN>"
+          annotations:
+            kubernetes.io/ingress.class: nginx
+            nginx.ingress.kubernetes.io/rewrite-target: /
+            nginx.ingress.kubernetes.io/configuration-snippet: |
+              add_header Access-Control-Allow-Methods "POST, GET, OPTIONS, PUT, PATCH, DELETE";
+              add_header Access-Control-Allow-Credentials true;
+              add_header Access-Control-Allow-Headers "DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization";
+  activiti-cloud-gateway:
+    ingress:
+      enabled: true
+      hostName: "activiti-cloud-gateway.jx-staging.<DOMAIN>"
+      annotations:
+        kubernetes.io/ingress.class: nginx
+        nginx.ingress.kubernetes.io/rewrite-target: /
+        nginx.ingress.kubernetes.io/enable-cors: true
+        nginx.ingress.kubernetes.io/cors-allow-headers: "*"
+        nginx.ingress.kubernetes.io/x-forwarded-prefix: true
+```
+
+**Be careful with the spaces (it is a yaml file) and caps**
+Now let's apply the changes:
+
+- Check that the files were modified
+> git status -> you should see two files changed
+
+- Do:
+> git add .
+
+- Then:
+> git commit -m “adding gateway and keycloak to staging env”
+
+- Finally:
+> git push
+
+You can check now inside the Jenkins UI that the staging environment pipeline has been triggered
 
 Once the Pipeline is finished and the service promoted to staging, you should be able to access the following URL (which you can obtain by doing jx get apps)
 
