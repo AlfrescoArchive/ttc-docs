@@ -88,7 +88,16 @@ We will start by forking and cloning the following two projects:
 
 Before cloning anything, we recommend to create a **workshop/** directory somewhere in your laptop/pc.
 
-# Front End
+# Front End (Client)
+
+## Postman Collection
+
+The simplest client ever is our Blueprint Postman collection that you can use to interact with the services. Download the JSON file, import it into the [Postman app](https://www.getpostman.com) and then create an environment with the following variables as you follow the tutorial:
+- gateway: {Gateway URL}
+- idm: {Keycloak URL}
+- realm: activiti
+
+## Dashboard UI (Angular App)
 
 As any application we will end up having a Front End that is going to interact with a bunch of services. This Application will need to know where the services are and we are going to start simply by forking the Github repository, and running the Front End application so we can track when our services are being deployed.
 
@@ -153,7 +162,7 @@ Now open env/values.yaml. Inside here, near the top, you'll find an item like:
 ```
 expose:
   config:
-    domain: <DOMAIN>
+    domain: {DOMAIN}
     exposer: Ingress
 ```
 You'll need to note the value of **<DOMAIN>** and replace it in the next step.
@@ -163,7 +172,7 @@ Edit env/values.yaml and append the below, replacing the value of **<DOMAIN>**:
 ```
 global:
   keycloak:
-    url: "http://activiti-keycloak.jx-staging.<DOMAIN>/auth"
+    url: "http://activiti-keycloak.jx-staging.{DOMAIN}/auth"
 
 
 infrastructure:
@@ -174,7 +183,7 @@ infrastructure:
           enabled: true
           path: /
           hosts:
-            - "activiti-keycloak.jx-staging.<DOMAIN>"
+            - "activiti-keycloak.jx-staging.{DOMAIN}"
           annotations:
             kubernetes.io/ingress.class: nginx
             nginx.ingress.kubernetes.io/rewrite-target: /
@@ -185,7 +194,7 @@ infrastructure:
   activiti-cloud-gateway:
     ingress:
       enabled: true
-      hostName: "activiti-cloud-gateway.jx-staging.<DOMAIN>"
+      hostName: "activiti-cloud-gateway.jx-staging.{DOMAIN}"
       annotations:
         kubernetes.io/ingress.class: nginx
         nginx.ingress.kubernetes.io/rewrite-target: /
@@ -249,7 +258,7 @@ This service emulates an internal service that will connect with an external Soc
 - After cloning it you need to update the Org value (we fork the project from the Activiti org to your personal org) inside the JenkinsFile in the root directory. 
 ```
  environment {
-      ORG               = '<YOUR User>'
+      ORG               = '{YOUR User HERE}'
       APP_NAME          = 'ttc-connectors-dummytwitter'
       CHARTMUSEUM_CREDS = credentials('jenkins-x-chartmuseum')
     }
@@ -393,7 +402,7 @@ We are using the Activiti Runtime Process Engine to automate the execution of th
 - After cloning it you need to update the Org value (we fork the project from the Activiti org to your personal org) inside the JenkinsFile in the root directory. 
 ```
  environment {
-      ORG               = '<YOUR User>'
+      ORG               = '{YOUR User HERE}'
       APP_NAME          = 'ttc-rb-english-campaign'
       CHARTMUSEUM_CREDS = credentials('jenkins-x-chartmuseum')
     }
