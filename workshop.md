@@ -429,10 +429,10 @@ This service is going to use RabbitMQ as well, but because we already set it up,
 > jx get apps
 
 - Copy the URL for the **ttc-connectors-dummytwitter** feed app:
-> curl {url}/feed
+> curl {url}/v1/feed
 
 - Should return false -> meaning that the feed is turned off
-> curl -X POST {url}/feed/start
+> curl -X POST {url}/v1/feed/start
 
 - This will start the feed. If you do
 > jx logs -> select -> ttc-connectors-dummytwitter
@@ -444,8 +444,20 @@ You can stop the logs with CTRL+C or open another terminal
 
 You will see tweets being consumed. Then you can stop the feed while we import more projects:
 
-> curl -X POST {url}/feed/stop
+> curl -X POST {url}/v1/feed/stop
 
+
+# Campaigns Controller 
+
+When having a single campaing we can access going straigh to the service, but in most scenarios we will need some kind of Campaign Controller (High Level Application Controller). We are going to deploy a very simple service called Campaigns Service which is in charge of keeping track of which campaigns are deployed by using the Service Registry to filter the available services and only show the ones tagged with metadata related to campaigns. 
+
+- Fork and Clone the [Campaigns Service](http://github.com/activiti/ttc-campaigns-service)
+- Update the Org for your user inside the JenkinsFile
+- Push the changes
+- Import into Jenkins X (make sure that you are in your dev environment -> jx env dev):
+  > jx import --branches "develop|PR-.*|feature.*"
+
+This service expose the /v1/campaigns endpoint where we can find out the deployed campaigns. 
 
 # Consuming Data
 
@@ -469,7 +481,7 @@ In-flight processes analyzing tweets
 
 Domain specific data for the campaign, only the tweets that have matched with the campaign.
 
-> curl http://{Gateway App URL}/ttc-query-campaign/processed/activiti
+> curl http://{Gateway App URL}/ttc-query-campaign/v1/processed/activiti
 
 ## Configuring PostgreSQL as Data Storage
 By default the Query Service is using H2 as an In-Memory Database, but you can change this by uncommenting the Spring Data JPA properties inside the application.properties file:
@@ -533,6 +545,8 @@ As you will see, when you try to consume data from the query service none of the
 
 Clone all of those projects inside the **workshop/** directory
 
+Update all the orgs inside the JenkinsFile to use your user name as we did for the other services.
+
 Import them all to Jenkins X
 > jx import --branches "develop|PR-.*|feature.*"
 
@@ -543,12 +557,10 @@ Wait for the pipelines to finish and now you are ready to check the UI, it shoul
 
 - You can add PostgreSQL and bind it to Query Service and Campaigns by uncommenting properties inside those projects
 - All Services are already built in with Zipkin for Tracing. So configuring Zipking should be matter of adding the Zipkin Helm Chart
-- Single Sign On: maybe using Keycloak Helm Chart
 - Monitoring with the ELK Stack, all the services are already including Spring Cloud Sleuth
 - Istio Service Mesh and rolling upgrades for campaigns
 - Spring Application Monitoring with Spring Cloud Kubernetes integration
 - Reactive UI with Webflux in the Query Service (half implemented already)
 - Adding Activiti Query GraphQL integration
-
-
+- Fully integrate the Application Service to the Campaigns Service
 
