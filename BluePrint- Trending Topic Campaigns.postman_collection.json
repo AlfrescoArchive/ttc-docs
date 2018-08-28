@@ -135,6 +135,24 @@
 					"response": []
 				},
 				{
+					"name": "Get Campaigns",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{kcAccessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "{{gateway}}/ttc-campaigns/v1/campaigns/"
+					},
+					"response": []
+				},
+				{
 					"name": "Gateway Routes Refresh",
 					"request": {
 						"method": "POST",
