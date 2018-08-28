@@ -246,7 +246,7 @@ This service emulates an internal service that will connect with an external Soc
 - Clone it inside the **workshop/** directory
   > git clone http://github.com/{your user}/ttc-connectors-dummytwitter
 
-- After cloneing it you need to update the Org value (we fork the project from the Activiti org to your personal org) inside the JenkinsFile in the root directory. 
+- After cloning it you need to update the Org value (we fork the project from the Activiti org to your personal org) inside the JenkinsFile in the root directory. 
 ```
  environment {
       ORG               = '<YOUR User>'
@@ -255,7 +255,9 @@ This service emulates an internal service that will connect with an external Soc
     }
 ```
 
-- Import into Jenkins X:
+- commit & push the changes to your fork
+
+- Import into Jenkins X (make sure that you are in your dev environment -> jx env dev):
   > jx import --branches "develop|PR-.*|feature.*"
 
 - Go to Jenkins X and check that the new project is registered and being built (jx get urls -> to retrieve the URLs again)
@@ -388,7 +390,17 @@ We are using the Activiti Runtime Process Engine to automate the execution of th
 - Clone it inside the **workshop/** directory
   > git clone http://github.com/{your user}/ttc-rb-english-campaign
 
-- Import it to Jenkins X:
+- After cloning it you need to update the Org value (we fork the project from the Activiti org to your personal org) inside the JenkinsFile in the root directory. 
+```
+ environment {
+      ORG               = '<YOUR User>'
+      APP_NAME          = 'ttc-rb-english-campaign'
+      CHARTMUSEUM_CREDS = credentials('jenkins-x-chartmuseum')
+    }
+```
+- commit & push the changes to your fork
+
+- Import into Jenkins X (make sure that you are in your dev environment -> jx env dev):
   > jx import --branches "develop|PR-.*|feature.*"
 
 - Check in Jenkins UI that the project was imported and the initial build is triggered
