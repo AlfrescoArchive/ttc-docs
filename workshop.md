@@ -83,7 +83,8 @@ Repositories [https://github.com/activiti/?q=ttc-](https://github.com/activiti/?
 The main idea to fork the projects is to be able to change them by sending PRs or just pushing to these repositories that will be monitored by Jenkins X.
 
 We will start by forking and cloning the following two projects:
-- ttc-dashboard-ui -> Front End
+- [ttc-dashboard-ui](http://github.com/activiti/ttc-dashboard-ui) -> Front End
+- [ttc-connectors-dummytwitter](http://github.com/activiti/ttc-connectors-dummytwitter) -> Activiti Cloud Connector
 
 Before cloning anything, we recommend to create a **workshop/** directory somewhere in your laptop/pc.
 
@@ -245,16 +246,46 @@ This service emulates an internal service that will connect with an external Soc
 - Clone it inside the **workshop/** directory
   > git clone http://github.com/{your user}/ttc-connectors-dummytwitter
 
+- After cloneing it you need to update the Org value (we fork the project from the Activiti org to your personal org) inside the JenkinsFile in the root directory. 
+```
+ environment {
+      ORG               = '<YOUR User>'
+      APP_NAME          = 'ttc-connectors-dummytwitter'
+      CHARTMUSEUM_CREDS = credentials('jenkins-x-chartmuseum')
+    }
+```
+
 - Import into Jenkins X:
   > jx import --branches "develop|PR-.*|feature.*"
 
 - Go to Jenkins X and check that the new project is registered and being built (jx get urls -> to retrieve the URLs again)
 
+- The pipeline should finish correctly
 
-The build should fail at this point, and this is because we need to configure Nexus to pick up other Maven repositories to download some dependencies 3rd Party dependencies which are not hosted in Maven Central or Spring Repositories (which are included by default).
+
+**Note: While you wait for the pipeline to finish (it takes around 7 minutes ) you can fork and clone the other projects**
+
+From the CLI you can execute:
+> jx get activities -w (-> to watch what Jenkins X is doing)
+
+> jx env -> select staging
+
+> kubectl get pods -> you should see your pod and the number of replicas
+
+```
+NAME                                                      READY     STATUS    RESTARTS   AGE
+jx-staging-ttc-connectors-dummytwitter-{hash}             0/1       Running   3          8m
+```
+
+> jx logs -> will tail the logs of our only service and it will reveal that the service is looking for RabbitMQ but rabbitMQ is not available
+
+If that doesn't work you can always use:
+> kubectl logs jx-staging-ttc-connectors-dummytwitter-{hash} -f 
 
 
-## Configuring Nexus
+## Configuring Nexus (skip if you don't need)
+
+There are some cases where you need to download dependencies for your project that are not publically available. For such scenarios you will need to configure the internal nexus to proxy a 3rd party nexus. If you need to do this, follow the intructions here. 
 
 - Get Nexus URL (in **dev** environment)
   > jx get urls
@@ -273,29 +304,11 @@ The build should fail at this point, and this is because we need to configure Ne
   - Select the activiti repository from the Available list and move it to the Members list
   - Scroll down and save
 
-Now we should be able to build our service.
-- Go back to Jenkins -> {Your User} -> ttc-connectors-dummytwitter -> develop
-- Hit Build Now
-
-**Note: While you wait for the pipeline to finish (it takes around 7 minutes ) you can fork and clone the other projects**
-
-From the CLI you can execute:
-> jx get activities -w (-> to watch what Jenkins X is doing)
-
-> jx env -> select staging
-
-> kubectl get pods -> you should see your pod and the number of replicas
-
-```
-NAME                                                      READY     STATUS    RESTARTS   AGE
-jx-staging-ttc-connectors-dummytwitter-{hash}   0/1       Running   3          8m
-```
-
-> jx logs -> will tail the logs of our only service and it will reveal that the service is looking for RabbitMQ but rabbitMQ is not available
 
 # Adding Environment Dependencies
 
 A very common scenario is when your service depends on a service provided by the infrastructure, such as a Database or a Message Broker.
+
 For such cases, you will need to setup inside your environment these infrastructural (environment) services. You can do that by using HELM charts.
 For RabbitMQ you can search for the HELM chart and use it. In Jenkins X you do this by following a GitOps approach, meaning that changing the environment configuration is done by adding commits to a Git repository.
 
@@ -335,6 +348,11 @@ Now let's apply the changes:
 
 - Then:
 > git commit -m “adding rabbitmq to staging env”
+
+- Get remote changes and rebase
+> git pull --rebase
+
+- Fix rebase problems 
 
 - Finally:
 > git push
