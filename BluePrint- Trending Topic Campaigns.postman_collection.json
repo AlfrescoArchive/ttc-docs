@@ -1,260 +1,517 @@
 {
 	"info": {
-		"_postman_id": "7bfe6f7a-f42b-27da-058c-075bd4bb024b",
+		"_postman_id": "55932b3d-4586-4757-9788-7a9f047373bc",
 		"name": "BluePrint: Trending Topic Campaigns",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "Get Gateway Service",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {},
-				"url": {
-					"raw": "{{gateway}}/",
-					"host": [
-						"{{gateway}}"
-					],
-					"path": [
-						""
-					]
+			"name": "Dummy Twitter Connector",
+			"item": [
+				{
+					"name": "Get Dummy Twitter Service",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{kcAccessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "{{gateway}}/ttc-connectors-dummytwitter/v1/"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Dummy Twitter Health",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{kcAccessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "{{gateway}}/ttc-connectors-dummytwitter/actuator/health"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Dummy Feed Status",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{kcAccessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "{{gateway}}/ttc-connectors-dummytwitter/v1/feed"
+					},
+					"response": []
+				},
+				{
+					"name": "Start Dummy Feed",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{kcAccessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "{{gateway}}/ttc-connectors-dummytwitter/v1/feed/start"
+					},
+					"response": []
+				},
+				{
+					"name": "Stop Dummy Feed",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{kcAccessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "{{gateway}}/ttc-connectors-dummytwitter/v1/feed/stop"
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "Get Dummy Twitter Service",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {},
-				"url": {
-					"raw": "{{gateway}}/ttc-connectors-dummytwitter/",
-					"host": [
-						"{{gateway}}"
-					],
-					"path": [
-						"ttc-connectors-dummytwitter",
-						""
-					]
+			"name": "Gateway Service",
+			"item": [
+				{
+					"name": "Get Gateway Service",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{kcAccessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "{{gateway}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Gateway Routes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "{{gateway}}/actuator/gateway/routes"
+					},
+					"response": []
+				},
+				{
+					"name": "Gateway Routes Refresh",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "{{gateway}}/actuator/refresh"
+					},
+					"response": []
+				},
+				{
+					"name": "Gateway Routes Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "{{gateway}}/actuator/health"
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "Get Campaign Service",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {},
-				"url": {
-					"raw": "{{gateway}}/ttc-connectors-dummytwitter/",
-					"host": [
-						"{{gateway}}"
-					],
-					"path": [
-						"ttc-connectors-dummytwitter",
-						""
-					]
+			"name": "Query Campaign Service",
+			"item": [
+				{
+					"name": "Get Campaign Health",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{kcAccessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "{{gateway}}/ttc-query-campaign/actuator/health"
+					},
+					"response": []
+				},
+				{
+					"name": "Get InFlight Tweets",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{kcAccessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "{{gateway}}/ttc-query-campaign/v1/inflight/activiti"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Matching Tweets",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{kcAccessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "{{gateway}}/ttc-query-campaign/v1/processed/activiti"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Discarded Tweets",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{kcAccessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "{{gateway}}/ttc-query-campaign/v1/discarded/activiti"
+					},
+					"response": []
+				},
+				{
+					"name": "Reactive - Get Matching Tweets",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "{{gateway}}/ttc-query-campaign/reactive/processed/activiti"
+					},
+					"response": []
+				},
+				{
+					"name": "Reactive - Get Discarded Tweets",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "{{gateway}}/ttc-query-campaign/reactive/discarded/activiti"
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "Get Processing Service",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {},
-				"url": {
-					"raw": "{{gateway}}/ttc-connectors-processing/",
-					"host": [
-						"{{gateway}}"
-					],
-					"path": [
-						"ttc-connectors-processing",
-						""
-					]
+			"name": "Processing Connector Service",
+			"item": [
+				{
+					"name": "Get Processing Service Health",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{kcAccessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "{{gateway}}/ttc-connectors-processing/actuator/health"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Processing Service",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{kcAccessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "{{gateway}}/ttc-connectors-processing/v1/"
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "Get Ranking Service",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {},
-				"url": {
-					"raw": "{{gateway}}/ttc-connectors-ranking/",
-					"host": [
-						"{{gateway}}"
-					],
-					"path": [
-						"ttc-connectors-ranking",
-						""
-					]
+			"name": "Reward Connector Service",
+			"item": [
+				{
+					"name": "Get Rewards Service",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{kcAccessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "{{gateway}}/ttc-connectors-reward/v1/"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Rewards Service Health",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{kcAccessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "{{gateway}}/ttc-connectors-reward/actuator/health"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Rewards",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{kcAccessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "{{gateway}}/ttc-connectors-reward/v1/rewards/activiti"
+					},
+					"response": []
+				},
+				{
+					"name": "Clean Rewards",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{kcAccessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "{{gateway}}/ttc-connectors-reward/v1/rewards/activiti"
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "Get Rewards Service",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {},
-				"url": {
-					"raw": "{{gateway}}/ttc-connectors-reward/",
-					"host": [
-						"{{gateway}}"
-					],
-					"path": [
-						"ttc-connectors-reward",
-						""
-					]
+			"name": "Ranking Connector Service",
+			"item": [
+				{
+					"name": "Get Ranking Service",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{kcAccessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "{{gateway}}/ttc-connectors-ranking/v1/"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Ranking Service Health",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{kcAccessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "{{gateway}}/ttc-connectors-ranking/actuator/health"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Rankings For Activiti Campaign Positive",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{kcAccessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "{{gateway}}/ttc-connectors-ranking/v1/rank/activiti/positive"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Rankings For Activiti Campaign Neutral",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{kcAccessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "{{gateway}}/ttc-connectors-ranking/v1/rank/activiti/negative"
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "Gateway Routes",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {},
-				"url": {
-					"raw": "{{gateway}}/actuator/gateway/routes",
-					"host": [
-						"{{gateway}}"
-					],
-					"path": [
-						"actuator",
-						"gateway",
-						"routes"
-					]
+			"name": "Get KeycloakToken",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var tokens=JSON.parse(responseBody); ",
+							"postman.setGlobalVariable(\"kcAccessToken\", tokens.access_token); ",
+							"pm.test(\"Setting the kcAccessToken.\", function () {",
+							"var tokens = JSON.parse(responseBody);",
+							"pm.globals.set(\"kcAccessToken\", tokens.access_token);",
+							"});"
+						]
+					}
 				}
-			},
-			"response": []
-		},
-		{
-			"name": "Gateway Routes Refresh",
+			],
 			"request": {
 				"method": "POST",
-				"header": [],
-				"body": {},
-				"url": {
-					"raw": "{{gateway}}/actuator/refresh",
-					"host": [
-						"{{gateway}}"
-					],
-					"path": [
-						"actuator",
-						"refresh"
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "client_id",
+							"value": "activiti",
+							"type": "text"
+						},
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "testuser",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "password",
+							"type": "text"
+						}
 					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Dummy Feed Status",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {},
-				"url": {
-					"raw": "{{gateway}}/ttc-connectors-dummytwitter/feed",
-					"host": [
-						"{{gateway}}"
-					],
-					"path": [
-						"ttc-connectors-dummytwitter",
-						"feed"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Start Dummy Feed",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {},
-				"url": {
-					"raw": "{{gateway}}/ttc-connectors-dummytwitter/feed/start",
-					"host": [
-						"{{gateway}}"
-					],
-					"path": [
-						"ttc-connectors-dummytwitter",
-						"feed",
-						"start"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Stop Dummy Feed",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {},
-				"url": {
-					"raw": "{{gateway}}/ttc-connectors-dummytwitter/feed/stop",
-					"host": [
-						"{{gateway}}"
-					],
-					"path": [
-						"ttc-connectors-dummytwitter",
-						"feed",
-						"stop"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Rankings For Activiti Campaign Positive",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {},
-				"url": {
-					"raw": "{{gateway}}/ttc-connectors-ranking/rank/activiti/positive",
-					"host": [
-						"{{gateway}}"
-					],
-					"path": [
-						"ttc-connectors-ranking",
-						"rank",
-						"activiti",
-						"positive"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Rankings For Activiti Campaign Neutral",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {},
-				"url": {
-					"raw": "{{gateway}}/ttc-connectors-ranking/rank/activiti/negative",
-					"host": [
-						"{{gateway}}"
-					],
-					"path": [
-						"ttc-connectors-ranking",
-						"rank",
-						"activiti",
-						"negative"
-					]
-				}
+				},
+				"url": "{{idm}}/auth/realms/{{realm}}/protocol/openid-connect/token"
 			},
 			"response": []
 		},
@@ -262,161 +519,17 @@
 			"name": "Get Active Process Instances",
 			"request": {
 				"method": "GET",
-				"header": [],
-				"body": {},
-				"url": {
-					"raw": "{{campaign}}/v1/process-instances/",
-					"host": [
-						"{{campaign}}"
-					],
-					"path": [
-						"v1",
-						"process-instances",
-						""
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Matching Tweets",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {},
-				"url": {
-					"raw": "{{gateway}}/ttc-query-campaign/processed/activiti",
-					"host": [
-						"{{gateway}}"
-					],
-					"path": [
-						"ttc-query-campaign",
-						"processed",
-						"activiti"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Reactive - Get Matching Tweets",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {},
-				"url": {
-					"raw": "{{gateway}}/ttc-query-campaign/reactive/processed/activiti",
-					"host": [
-						"{{gateway}}"
-					],
-					"path": [
-						"ttc-query-campaign",
-						"reactive",
-						"processed",
-						"activiti"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Reactive - Get Discarded Tweets",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {},
-				"url": {
-					"raw": "{{gateway}}/ttc-query-campaign/reactive/discarded/activiti",
-					"host": [
-						"{{gateway}}"
-					],
-					"path": [
-						"ttc-query-campaign",
-						"reactive",
-						"discarded",
-						"activiti"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Discarded Tweets",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {},
-				"url": {
-					"raw": "{{gateway}}/ttc-query-campaign/discarded/activiti",
-					"host": [
-						"{{gateway}}"
-					],
-					"path": [
-						"ttc-query-campaign",
-						"discarded",
-						"activiti"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get InFlight Tweets",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {},
-				"url": {
-					"raw": "{{gateway}}/ttc-query-campaign/inflight/activiti",
-					"host": [
-						"{{gateway}}"
-					],
-					"path": [
-						"ttc-query-campaign",
-						"inflight",
-						"activiti"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Rewards",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {},
-				"url": {
-					"raw": "{{gateway}}/ttc-connectors-reward/rewards/activiti",
-					"host": [
-						"{{gateway}}"
-					],
-					"path": [
-						"ttc-connectors-reward",
-						"rewards",
-						"activiti"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Clean Rewards",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"body": {},
-				"url": {
-					"raw": "{{gateway}}/ttc-connectors-reward/rewards/activiti",
-					"host": [
-						"{{gateway}}"
-					],
-					"path": [
-						"ttc-connectors-reward",
-						"rewards",
-						"activiti"
-					]
-				}
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{kcAccessToken}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": "{{gateway}}/ttc-rb-english-campaign/v1/process-instances/"
 			},
 			"response": []
 		}
