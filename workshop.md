@@ -84,7 +84,6 @@ The main idea to fork the projects is to be able to change them by sending PRs o
 
 We will start by forking and cloning the following two projects:
 - ttc-dashboard-ui -> Front End
-- ttc-infra-gateway -> Gateway
 
 Before cloning anything, we recommend to create a **workshop/** directory somewhere in your laptop/pc.
 
@@ -127,9 +126,9 @@ Just import it into Jenkins X by executing:
 
 # Single Entrypoint and Authentication
 
-As mentioned before our Gateway component will be the single entrypoint for our services' clients. We will start by importing the Gateway project into Jenkins X and then we will add our services which implement our scenario. We want to provide a single entry point and service discovery for all our services in our infrastructure. This Service is a simple Spring Boot 2 application built using the [Spring Cloud Gateway Starter](https://cloud.spring.io/spring-cloud-gateway/) and it is using the [Spring Cloud Kubernetes Discovery](https://github.com/spring-cloud-incubator/spring-cloud-kubernetes) project to figure out which services are being deployed into the Kubernetes namespace where our applications live.
+As mentioned before our Gateway component will be the single entrypoint for our services' clients. We want to provide a single entry point and service discovery for all our services in our infrastructure. This Service is a simple Spring Boot 2 application built using the [Spring Cloud Gateway Starter](https://cloud.spring.io/spring-cloud-gateway/) and it is using the [Spring Cloud Kubernetes Discovery](https://github.com/spring-cloud-incubator/spring-cloud-kubernetes) project to figure out which services are being deployed into the Kubernetes namespace where our applications live.
 
-We've a convenient activiti helm chart that we call `infrastructure` that sets up both the gateway and also keycloak. We'll use keycloak for authentication and authorisation, so that we know who is logging and that they're only doing what they are allowed to do.
+We've a convenient activiti helm chart called `infrastructure` that sets up both the gateway and also [Keycloak](http://keycloak.org). We'll use Keycloak for authentication and authorisation (SSO), so that we know who is logging and that they're only doing what they are allowed to do.
 
 Let's add `infrastructure` to the staging environment:
 
@@ -155,11 +154,10 @@ expose:
   config:
     domain: <DOMAIN>
     exposer: Ingress
-    exposer: LoadBalancer
 ```
-You'll need to note the value of <DOMAIN> and replace it in the next step.
+You'll need to note the value of **<DOMAIN>** and replace it in the next step.
 
-Edit env/values.yaml and append the below, replacing the value of <DOMAIN>:
+Edit env/values.yaml and append the below, replacing the value of **<DOMAIN>**:
 
 ```
 global:
@@ -212,28 +210,24 @@ Now let's apply the changes:
 
 You can check now inside the Jenkins UI that the staging environment pipeline has been triggered
 
-Once the Pipeline is finished and the service promoted to staging, you should be able to access the following URL (which you can obtain by doing jx get apps)
+Once the Pipeline is finished and the helm charts are deployed to the staging environment you should be able to execute:
+> kubectl get ingress
 
-> curl http://{Gateway App URL}/campaigns
+```
+NAME                                HOSTS                                                     ADDRESS          PORTS     AGE
+jx-staging-activiti-cloud-gateway   activiti-cloud-gateway.jx-staging.<DOMAIN>   <EXTERNAL-IP>   80        4m
+jx-staging-keycloak                 activiti-keycloak.jx-staging.<DOMAIN>        <EXTERNAL-IP>   80        4m
 
-or
+```
 
-> curl "$(jx get apps | grep ttc-infra-gateway | awk '{print $4"/campaigns"}')" | json_pp
-
-Also, you can access to:
-
-> curl http://{Gateway App URL}/actuator/gateway/routes
-
-or
-
-> curl "$(jx get apps | grep ttc-infra-gateway | awk '{print $4"/actuator/gateway/routes"}')" | json_pp
-
+> curl http://activiti-cloud-gateway.jx-staging.<DOMAIN>/actuator/gateway/routes
+	
 Which shows the available registered services inside the gateway. At this point there shouldn't be any service registered.
 
-You can easily tail the logs of your service by executing:
-> jx logs
+or access to Keycloak Admin Console: http://activiti-keycloak.jx-staging.<DOMAIN> in your browser (user and password are admin/admin)
 
-You can also use **kubectl** to check that your Pods, Deployments and Services are up:
+
+You can also use **kubectl** to check that your Pods, Deployments and Services are up at all time:
 > kubectl get pods
 
 > kubectl get services
@@ -246,7 +240,6 @@ All the Deployments are configured to have a single replica for each service so 
 # Our First Service
 
 This service emulates an internal service that will connect with an external Social Media feed such as Twitter. We wanted to make sure that we have a Dummy Service to be able to control the feed and the content for testing purposes. This service, consume data from the external stream and push it to RabbitMQ (you can use Kafka, ActiveMQ or other binders) via Spring Cloud Streams for other service to consume each tweet in an Async fashion.
-
 
 - Fork [http://github.com/activiti/ttc-connectors-dummytwitter](http://github.com/activiti/ttc-connectors-dummytwitter)
 - Clone it inside the **workshop/** directory
