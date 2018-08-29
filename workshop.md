@@ -229,16 +229,16 @@ Once the Pipeline is finished and the helm charts are deployed to the staging en
 
 ```
 NAME                                HOSTS                                                     ADDRESS          PORTS     AGE
-jx-staging-activiti-cloud-gateway   activiti-cloud-gateway.jx-staging.<DOMAIN>   <EXTERNAL-IP>   80        4m
-jx-staging-keycloak                 activiti-keycloak.jx-staging.<DOMAIN>        <EXTERNAL-IP>   80        4m
+jx-staging-activiti-cloud-gateway   activiti-cloud-gateway.jx-staging.{DOMAIN}   <EXTERNAL-IP>   80        4m
+jx-staging-keycloak                 activiti-keycloak.jx-staging.{DOMAIN}        <EXTERNAL-IP>   80        4m
 
 ```
 
-> curl http://activiti-cloud-gateway.jx-staging.<DOMAIN>/actuator/gateway/routes
+> curl http://activiti-cloud-gateway.jx-staging.{DOMAIN}/actuator/gateway/routes
 	
 Which shows the available registered services inside the gateway. At this point there shouldn't be any service registered.
 
-or access to Keycloak Admin Console: http://activiti-keycloak.jx-staging.<DOMAIN> in your browser (user and password are admin/admin)
+or access to Keycloak Admin Console: http://activiti-keycloak.jx-staging.{DOMAIN} in your browser (user and password are admin/admin)
 
 
 You can also use **kubectl** to check that your Pods, Deployments and Services are up at all time:
