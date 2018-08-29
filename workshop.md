@@ -12,6 +12,8 @@ This workshop relies on the following technology stack:
 
 We will be using [Jenkins X](http://jenkinsx.io) to accelerate the entire journey but it is not required to get all the services working. 
 
+**Note: we have tested this working in Mac OSX and Linux, if you are using windows and something fail, please report to [Jenkins X](https://github.com/jenkins-x/jx/issues)
+
 This example was built as an Open Source Project to highlight the capabilities of Activiti OSS which is a Cloud Native Business Automation Suite. All the software is currently in Alpha stage and we are planning to release a Beta1 release at the end of June, early July. We would love to get your feedback once that release is out. It is important to understand that even the example was built to highlight some of the Activiti OSS project capabilities, it uses standard practices for Cloud Native Applications that can be reused in any project. We aim to help to reduce the time that Software Developers spend on this journey by sharing examples that you can use as baselines for your projects. 
 
 This example is not perfect in any way, but it is an evolving examples that we keep improving for each of our Activiti OSS releases. We use this example in a continuous deployment approach to test, validate and migration paths between releases. 
