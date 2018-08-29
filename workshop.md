@@ -439,25 +439,9 @@ This service is going to use RabbitMQ as well, but because we already set it up,
 
 
 ## Time for some tests
-> jx get apps
+In order to test these endpoints you can use the Postman collection which deals with the JWT Token required to interact with the services. 
 
-- Copy the URL for the **ttc-connectors-dummytwitter** feed app:
-> curl {url}/v1/feed
-
-- Should return false -> meaning that the feed is turned off
-> curl -X POST {url}/v1/feed/start
-
-- This will start the feed. If you do
-> jx logs -> select -> ttc-connectors-dummytwitter
-
-You will see the twitter feed being consumed and sent via Spring Cloud Streams. Every available Campaign (who matches some filters, for example the language filter) will be able to pick up the tweet for processing.
-
-You can stop the logs with CTRL+C or open another terminal
-> jx logs -> select -> ttc-rb-english-campaign
-
-You will see tweets being consumed. Then you can stop the feed while we import more projects:
-
-> curl -X POST {url}/v1/feed/stop
+Before calling these services, you need to obtain the token by executing the request called "Get KeycloakToken"
 
 
 # Campaigns Controller 
