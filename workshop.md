@@ -51,7 +51,7 @@ If you don't have a Kubernetes Cluster with [Jenkins X](http://jenkinsx.io) inst
   - Select **n1-standard-2**
 
 Note: Look at [Jenkins X](http://jenkinsx.io) website for more information about how to install and create K8s clusters in other Cloud Providers
-Note (1): In case you have errors about gcloud, please install google cloud sdk from:
+Note (1): In Windows or In case you have errors about gcloud, please install google cloud sdk from:
 https://cloud.google.com/sdk/docs/
 Note (2): If you want to acess to your google cloud console go here https://console.cloud.google.com/home/dashboard
 Note (3): In case you have errors about helm, install it from the helm 2.8.2 repository : https://github.com/kubernetes/helm/releases/tag/v2.8.2
