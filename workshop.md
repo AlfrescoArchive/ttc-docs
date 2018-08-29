@@ -223,6 +223,7 @@ Now let's apply the changes:
 You can check now inside the Jenkins UI that the staging environment pipeline has been triggered
 
 Once the Pipeline is finished and the helm charts are deployed to the staging environment you should be able to execute:
+> jx env staging (to switch to the staging environment)
 > kubectl get ingress
 
 ```
