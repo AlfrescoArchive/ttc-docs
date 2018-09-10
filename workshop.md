@@ -12,6 +12,8 @@ This workshop relies on the following technology stack:
 
 We will be using [Jenkins X](http://jenkinsx.io) to accelerate the entire journey but it is not required to get all the services working. 
 
+**Note**: we have tested this working in Mac OSX and Linux, if you are using windows and something fail, please report to [Jenkins X](https://github.com/jenkins-x/jx/issues)
+
 This example was built as an Open Source Project to highlight the capabilities of Activiti OSS which is a Cloud Native Business Automation Suite. All the software is currently in Alpha stage and we are planning to release a Beta1 release at the end of June, early July. We would love to get your feedback once that release is out. It is important to understand that even the example was built to highlight some of the Activiti OSS project capabilities, it uses standard practices for Cloud Native Applications that can be reused in any project. We aim to help to reduce the time that Software Developers spend on this journey by sharing examples that you can use as baselines for your projects. 
 
 This example is not perfect in any way, but it is an evolving examples that we keep improving for each of our Activiti OSS releases. We use this example in a continuous deployment approach to test, validate and migration paths between releases. 
@@ -49,7 +51,7 @@ If you don't have a Kubernetes Cluster with [Jenkins X](http://jenkinsx.io) inst
   - Select **n1-standard-2**
 
 Note: Look at [Jenkins X](http://jenkinsx.io) website for more information about how to install and create K8s clusters in other Cloud Providers
-Note (1): In case you have errors about gcloud, please install google cloud sdk from:
+Note (1): In Windows or In case you have errors about gcloud, please install google cloud sdk from:
 https://cloud.google.com/sdk/docs/
 Note (2): If you want to acess to your google cloud console go here https://console.cloud.google.com/home/dashboard
 Note (3): In case you have errors about helm, install it from the helm 2.8.2 repository : https://github.com/kubernetes/helm/releases/tag/v2.8.2
@@ -83,12 +85,21 @@ Repositories [https://github.com/activiti/?q=ttc-](https://github.com/activiti/?
 The main idea to fork the projects is to be able to change them by sending PRs or just pushing to these repositories that will be monitored by Jenkins X.
 
 We will start by forking and cloning the following two projects:
-- ttc-dashboard-ui -> Front End
-- ttc-infra-gateway -> Gateway
+- [ttc-dashboard-ui](http://github.com/activiti/ttc-dashboard-ui) -> Front End
+- [ttc-connectors-dummytwitter](http://github.com/activiti/ttc-connectors-dummytwitter) -> Activiti Cloud Connector
 
 Before cloning anything, we recommend to create a **workshop/** directory somewhere in your laptop/pc.
 
-# Front End
+# Front End (Client)
+
+## Postman Collection
+
+The simplest client ever is our Blueprint Postman collection that you can use to interact with the services. Download/Clone the JSON file (https://github.com/Activiti/ttc-docs/blob/develop/BluePrint-%20Trending%20Topic%20Campaigns.postman_collection.json), import it into the [Postman app](https://www.getpostman.com) and then create an environment with the following variables as you follow the tutorial:
+- gateway: {Gateway URL}
+- idm: {Keycloak URL}
+- realm: activiti
+
+## Dashboard UI (Angular App)
 
 As any application we will end up having a Front End that is going to interact with a bunch of services. This Application will need to know where the services are and we are going to start simply by forking the Github repository, and running the Front End application so we can track when our services are being deployed.
 
@@ -125,46 +136,112 @@ Just import it into Jenkins X by executing:
  > jx console
  
 
-# Single Entrypoint
+# Single Entrypoint and Authentication
 
-As mentioned before our Gateway component will be the single entrypoint for our services' clients. We will start by importing the Gateway project into Jenkins X and then we will add our services which implement our scenario. We want to provide a single entry point and service discovery for all our services in our infrastructure. This Service is a simple Spring Boot 2 application built using the [Spring Cloud Gateway Starter](https://cloud.spring.io/spring-cloud-gateway/) and it is using the [Spring Cloud Kubernetes Discovery](https://github.com/spring-cloud-incubator/spring-cloud-kubernetes) project to figure out which services are being deployed into the Kubernetes namespace where our application live.
+As mentioned before our Gateway component will be the single entrypoint for our services' clients. We want to provide a single entry point and service discovery for all our services in our infrastructure. This Service is a simple Spring Boot 2 application built using the [Spring Cloud Gateway Starter](https://cloud.spring.io/spring-cloud-gateway/) and it is using the [Spring Cloud Kubernetes Discovery](https://github.com/spring-cloud-incubator/spring-cloud-kubernetes) project to figure out which services are being deployed into the Kubernetes namespace where our applications live.
 
-- Switch to the Dev environment in Jenkins X by
-  > jx env dev
+We've a convenient activiti helm chart called `infrastructure` that sets up both the gateway and also [Keycloak](http://keycloak.org). We'll use Keycloak for authentication and authorisation (SSO), so that we know who is logging and that they're only doing what they are allowed to do.
 
-- Fork [http://github.com/activiti/ttc-infra-gateway](http://github.com/activiti/ttc-infra-gateway)
-- Clone your fork inside the **workshop/** directory
-  > git clone http://github.com/{your user}/ttc-infra-gateway
+Let's add `infrastructure` to the staging environment:
 
-- Import project into Jenkins X:
-  > jx import --branches "develop|PR-.*|feature.*"
+> cd ~/.jx/environments/{github user}/environment-{env name}-staging
+> git pull -> to retrieve the latest changes from the staging environment
 
-- Verify in Jenkins UI that the project was imported and the pipeline is running (jx console)
+Edit Makefile and within the series of `helm add` steps under `build: clean`, add the following line:
+```
+	helm repo add activiti-cloud-charts https://activiti.github.io/activiti-cloud-charts/
+```
+
+Edit env/requirements.yaml and add append:
+```
+- name: infrastructure
+  repository: https://activiti.github.io/activiti-cloud-charts/
+  version: 0.2.0
+```
+
+Now open env/values.yaml. Inside here, near the top, you'll find an item like:
+
+```
+expose:
+  config:
+    domain: {DOMAIN}
+    exposer: Ingress
+```
+You'll need to note the value of **<DOMAIN>** and replace it in the next step.
+
+Edit env/values.yaml and append the below, replacing the value of **<DOMAIN>**:
+
+```
+global:
+  keycloak:
+    url: "http://activiti-keycloak.jx-staging.{DOMAIN}/auth"
 
 
+infrastructure:
+  activiti-keycloak:
+    keycloak:
+      keycloak:
+        ingress:
+          enabled: true
+          path: /
+          hosts:
+            - "activiti-keycloak.jx-staging.{DOMAIN}"
+          annotations:
+            kubernetes.io/ingress.class: nginx
+            nginx.ingress.kubernetes.io/rewrite-target: /
+            nginx.ingress.kubernetes.io/configuration-snippet: |
+              add_header Access-Control-Allow-Methods "POST, GET, OPTIONS, PUT, PATCH, DELETE";
+              add_header Access-Control-Allow-Credentials true;
+              add_header Access-Control-Allow-Headers "DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization";
+  activiti-cloud-gateway:
+    ingress:
+      enabled: true
+      hostName: "activiti-cloud-gateway.jx-staging.{DOMAIN}"
+      annotations:
+        kubernetes.io/ingress.class: nginx
+        nginx.ingress.kubernetes.io/rewrite-target: /
+        nginx.ingress.kubernetes.io/enable-cors: true
+        nginx.ingress.kubernetes.io/cors-allow-headers: "*"
+        nginx.ingress.kubernetes.io/x-forwarded-prefix: true
+```
 
-Once the Pipeline is finished and the service promoted to staging, you should be able to access the following URL (which you can obtain by doing jx get apps)
+**Be careful with the spaces (it is a yaml file) and caps**
+Now let's apply the changes:
 
-> curl http://{Gateway App URL}/campaigns
+- Check that the files were modified
+> git status -> you should see two files changed
 
-or
+- Do:
+> git add .
 
-> curl "$(jx get apps | grep ttc-infra-gateway | awk '{print $4"/campaigns"}')" | json_pp
+- Then:
+> git commit -m “adding gateway and keycloak to staging env”
 
-Also, you can access to:
+- Finally:
+> git push
 
-> curl http://{Gateway App URL}/actuator/gateway/routes
+You can check now inside the Jenkins UI that the staging environment pipeline has been triggered
 
-or
+Once the Pipeline is finished and the helm charts are deployed to the staging environment you should be able to execute:
+> jx env staging (to switch to the staging environment)
 
-> curl "$(jx get apps | grep ttc-infra-gateway | awk '{print $4"/actuator/gateway/routes"}')" | json_pp
+> kubectl get ingress
 
+```
+NAME                                HOSTS                                                     ADDRESS          PORTS     AGE
+jx-staging-activiti-cloud-gateway   activiti-cloud-gateway.jx-staging.{DOMAIN}   <EXTERNAL-IP>   80        4m
+jx-staging-keycloak                 activiti-keycloak.jx-staging.{DOMAIN}        <EXTERNAL-IP>   80        4m
+
+```
+
+> curl http://activiti-cloud-gateway.jx-staging.{DOMAIN}/actuator/gateway/routes
+	
 Which shows the available registered services inside the gateway. At this point there shouldn't be any service registered.
 
-You can easily tail the logs of your service by executing:
-> jx logs
+or access to Keycloak Admin Console: http://activiti-keycloak.jx-staging.{DOMAIN} in your browser (user and password are admin/admin)
 
-You can also use **kubectl** to check that your Pods, Deployments and Services are up:
+
+You can also use **kubectl** to check that your Pods, Deployments and Services are up at all time:
 > kubectl get pods
 
 > kubectl get services
@@ -178,21 +255,52 @@ All the Deployments are configured to have a single replica for each service so 
 
 This service emulates an internal service that will connect with an external Social Media feed such as Twitter. We wanted to make sure that we have a Dummy Service to be able to control the feed and the content for testing purposes. This service, consume data from the external stream and push it to RabbitMQ (you can use Kafka, ActiveMQ or other binders) via Spring Cloud Streams for other service to consume each tweet in an Async fashion.
 
-
 - Fork [http://github.com/activiti/ttc-connectors-dummytwitter](http://github.com/activiti/ttc-connectors-dummytwitter)
 - Clone it inside the **workshop/** directory
   > git clone http://github.com/{your user}/ttc-connectors-dummytwitter
 
-- Import into Jenkins X:
+- After cloning it you need to update the Org value (we fork the project from the Activiti org to your personal org) inside the JenkinsFile in the root directory. 
+```
+ environment {
+      ORG               = '{YOUR User HERE}'
+      APP_NAME          = 'ttc-connectors-dummytwitter'
+      CHARTMUSEUM_CREDS = credentials('jenkins-x-chartmuseum')
+    }
+```
+
+- commit & push the changes to your fork
+
+- Import into Jenkins X (make sure that you are in your dev environment -> jx env dev):
   > jx import --branches "develop|PR-.*|feature.*"
 
 - Go to Jenkins X and check that the new project is registered and being built (jx get urls -> to retrieve the URLs again)
 
+- The pipeline should finish correctly
 
-The build should fail at this point, and this is because we need to configure Nexus to pick up other Maven repositories to download some dependencies 3rd Party dependencies which are not hosted in Maven Central or Spring Repositories (which are included by default).
+
+**Note: While you wait for the pipeline to finish (it takes around 7 minutes ) you can fork and clone the other projects**
+
+From the CLI you can execute:
+> jx get activities -w (-> to watch what Jenkins X is doing)
+
+> jx env -> select staging
+
+> kubectl get pods -> you should see your pod and the number of replicas
+
+```
+NAME                                                      READY     STATUS    RESTARTS   AGE
+jx-staging-ttc-connectors-dummytwitter-{hash}             0/1       Running   3          8m
+```
+
+> jx logs -> will tail the logs of our only service and it will reveal that the service is looking for RabbitMQ but rabbitMQ is not available
+
+If that doesn't work you can always use:
+> kubectl logs jx-staging-ttc-connectors-dummytwitter-{hash} -f 
 
 
-## Configuring Nexus
+## Configuring Nexus (skip if you don't need)
+
+There are some cases where you need to download dependencies for your project that are not publically available. For such scenarios you will need to configure the internal nexus to proxy a 3rd party nexus. If you need to do this, follow the intructions here. 
 
 - Get Nexus URL (in **dev** environment)
   > jx get urls
@@ -211,29 +319,11 @@ The build should fail at this point, and this is because we need to configure Ne
   - Select the activiti repository from the Available list and move it to the Members list
   - Scroll down and save
 
-Now we should be able to build our service.
-- Go back to Jenkins -> {Your User} -> ttc-connectors-dummytwitter -> develop
-- Hit Build Now
-
-**Note: While you wait for the pipeline to finish (it takes around 7 minutes ) you can fork and clone the other projects**
-
-From the CLI you can execute:
-> jx get activities -w (-> to watch what Jenkins X is doing)
-
-> jx env -> select staging
-
-> kubectl get pods -> you should see your pod and the number of replicas
-
-```
-NAME                                                      READY     STATUS    RESTARTS   AGE
-jx-staging-ttc-connectors-dummytwitter-{hash}   0/1       Running   3          8m
-```
-
-> jx logs -> will tail the logs of our only service and it will reveal that the service is looking for RabbitMQ but rabbitMQ is not available
 
 # Adding Environment Dependencies
 
 A very common scenario is when your service depends on a service provided by the infrastructure, such as a Database or a Message Broker.
+
 For such cases, you will need to setup inside your environment these infrastructural (environment) services. You can do that by using HELM charts.
 For RabbitMQ you can search for the HELM chart and use it. In Jenkins X you do this by following a GitOps approach, meaning that changing the environment configuration is done by adding commits to a Git repository.
 
@@ -274,6 +364,11 @@ Now let's apply the changes:
 - Then:
 > git commit -m “adding rabbitmq to staging env”
 
+- Get remote changes and rebase
+> git pull --rebase
+
+- Fix rebase problems 
+
 - Finally:
 > git push
 
@@ -308,7 +403,17 @@ We are using the Activiti Runtime Process Engine to automate the execution of th
 - Clone it inside the **workshop/** directory
   > git clone http://github.com/{your user}/ttc-rb-english-campaign
 
-- Import it to Jenkins X:
+- After cloning it you need to update the Org value (we fork the project from the Activiti org to your personal org) inside the JenkinsFile in the root directory. 
+```
+ environment {
+      ORG               = '{YOUR User HERE}'
+      APP_NAME          = 'ttc-rb-english-campaign'
+      CHARTMUSEUM_CREDS = credentials('jenkins-x-chartmuseum')
+    }
+```
+- commit & push the changes to your fork
+
+- Import into Jenkins X (make sure that you are in your dev environment -> jx env dev):
   > jx import --branches "develop|PR-.*|feature.*"
 
 - Check in Jenkins UI that the project was imported and the initial build is triggered
@@ -334,26 +439,22 @@ This service is going to use RabbitMQ as well, but because we already set it up,
 
 
 ## Time for some tests
-> jx get apps
+In order to test these endpoints you can use the Postman collection which deals with the JWT Token required to interact with the services. 
 
-- Copy the URL for the **ttc-connectors-dummytwitter** feed app:
-> curl {url}/feed
+Before calling these services, you need to obtain the token by executing the request called "Get KeycloakToken"
 
-- Should return false -> meaning that the feed is turned off
-> curl -X POST {url}/feed/start
 
-- This will start the feed. If you do
-> jx logs -> select -> ttc-connectors-dummytwitter
+# Campaigns Controller 
 
-You will see the twitter feed being consumed and sent via Spring Cloud Streams. Every available Campaign (who matches some filters, for example the language filter) will be able to pick up the tweet for processing.
+When having a single campaing we can access going straigh to the service, but in most scenarios we will need some kind of Campaign Controller (High Level Application Controller). We are going to deploy a very simple service called Campaigns Service which is in charge of keeping track of which campaigns are deployed by using the Service Registry to filter the available services and only show the ones tagged with metadata related to campaigns. 
 
-You can stop the logs with CTRL+C or open another terminal
-> jx logs -> select -> ttc-rb-english-campaign
+- Fork and Clone the [Campaigns Service](http://github.com/activiti/ttc-campaigns-service)
+- Update the Org for your user inside the JenkinsFile
+- Push the changes
+- Import into Jenkins X (make sure that you are in your dev environment -> jx env dev):
+  > jx import --branches "develop|PR-.*|feature.*"
 
-You will see tweets being consumed. Then you can stop the feed while we import more projects:
-
-> curl -X POST {url}/feed/stop
-
+This service expose the /v1/campaigns endpoint where we can find out the deployed campaigns. 
 
 # Consuming Data
 
@@ -377,7 +478,7 @@ In-flight processes analyzing tweets
 
 Domain specific data for the campaign, only the tweets that have matched with the campaign.
 
-> curl http://{Gateway App URL}/ttc-query-campaign/processed/activiti
+> curl http://{Gateway App URL}/ttc-query-campaign/v1/processed/activiti
 
 ## Configuring PostgreSQL as Data Storage
 By default the Query Service is using H2 as an In-Memory Database, but you can change this by uncommenting the Spring Data JPA properties inside the application.properties file:
@@ -441,6 +542,8 @@ As you will see, when you try to consume data from the query service none of the
 
 Clone all of those projects inside the **workshop/** directory
 
+Update all the orgs inside the JenkinsFile to use your user name as we did for the other services.
+
 Import them all to Jenkins X
 > jx import --branches "develop|PR-.*|feature.*"
 
@@ -451,12 +554,10 @@ Wait for the pipelines to finish and now you are ready to check the UI, it shoul
 
 - You can add PostgreSQL and bind it to Query Service and Campaigns by uncommenting properties inside those projects
 - All Services are already built in with Zipkin for Tracing. So configuring Zipking should be matter of adding the Zipkin Helm Chart
-- Single Sign On: maybe using Keycloak Helm Chart
 - Monitoring with the ELK Stack, all the services are already including Spring Cloud Sleuth
 - Istio Service Mesh and rolling upgrades for campaigns
 - Spring Application Monitoring with Spring Cloud Kubernetes integration
 - Reactive UI with Webflux in the Query Service (half implemented already)
 - Adding Activiti Query GraphQL integration
-
-
+- Fully integrate the Application Service to the Campaigns Service
 
