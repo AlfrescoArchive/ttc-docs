@@ -1,8 +1,8 @@
 {
 	"info": {
-		"_postman_id": "d5bc4d43-320d-41b1-b057-d2ace3337d73",
+		"_postman_id": "abb08197-4882-400f-b31f-1e75d810f4d9",
 		"name": "BluePrint: Trending Topic Campaigns",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
 	"item": [
 		{
@@ -22,17 +22,7 @@
 							"mode": "raw",
 							"raw": ""
 						},
-						"url": {
-							"raw": "{{gateway}}/ttc-connectors-dummytwitter/v1/",
-							"host": [
-								"{{gateway}}"
-							],
-							"path": [
-								"ttc-connectors-dummytwitter",
-								"v1",
-								""
-							]
-						}
+						"url": "{{gateway}}/ttc-connectors-dummytwitter/v1/"
 					},
 					"response": []
 				},
@@ -50,17 +40,7 @@
 							"mode": "raw",
 							"raw": ""
 						},
-						"url": {
-							"raw": "{{gateway}}/ttc-connectors-dummytwitter/actuator/health",
-							"host": [
-								"{{gateway}}"
-							],
-							"path": [
-								"ttc-connectors-dummytwitter",
-								"actuator",
-								"health"
-							]
-						}
+						"url": "{{gateway}}/ttc-connectors-dummytwitter/actuator/health"
 					},
 					"response": []
 				},
@@ -78,17 +58,7 @@
 							"mode": "raw",
 							"raw": ""
 						},
-						"url": {
-							"raw": "{{gateway}}/ttc-connectors-dummytwitter/v1/feed",
-							"host": [
-								"{{gateway}}"
-							],
-							"path": [
-								"ttc-connectors-dummytwitter",
-								"v1",
-								"feed"
-							]
-						}
+						"url": "{{gateway}}/ttc-connectors-dummytwitter/v1/feed"
 					},
 					"response": []
 				},
@@ -106,18 +76,7 @@
 							"mode": "raw",
 							"raw": ""
 						},
-						"url": {
-							"raw": "{{gateway}}/ttc-connectors-dummytwitter/v1/feed/start",
-							"host": [
-								"{{gateway}}"
-							],
-							"path": [
-								"ttc-connectors-dummytwitter",
-								"v1",
-								"feed",
-								"start"
-							]
-						}
+						"url": "{{gateway}}/ttc-connectors-dummytwitter/v1/feed/start"
 					},
 					"response": []
 				},
@@ -135,18 +94,7 @@
 							"mode": "raw",
 							"raw": ""
 						},
-						"url": {
-							"raw": "{{gateway}}/ttc-connectors-dummytwitter/v1/feed/stop",
-							"host": [
-								"{{gateway}}"
-							],
-							"path": [
-								"ttc-connectors-dummytwitter",
-								"v1",
-								"feed",
-								"stop"
-							]
-						}
+						"url": "{{gateway}}/ttc-connectors-dummytwitter/v1/feed/stop"
 					},
 					"response": []
 				}
@@ -169,12 +117,7 @@
 							"mode": "raw",
 							"raw": ""
 						},
-						"url": {
-							"raw": "{{gateway}}",
-							"host": [
-								"{{gateway}}"
-							]
-						}
+						"url": "{{gateway}}"
 					},
 					"response": []
 				},
@@ -187,17 +130,7 @@
 							"mode": "raw",
 							"raw": ""
 						},
-						"url": {
-							"raw": "{{gateway}}/actuator/gateway/routes",
-							"host": [
-								"{{gateway}}"
-							],
-							"path": [
-								"actuator",
-								"gateway",
-								"routes"
-							]
-						}
+						"url": "{{gateway}}/actuator/gateway/routes"
 					},
 					"response": []
 				},
@@ -215,18 +148,7 @@
 							"mode": "raw",
 							"raw": ""
 						},
-						"url": {
-							"raw": "{{gateway}}/ttc-campaigns/v1/campaigns/",
-							"host": [
-								"{{gateway}}"
-							],
-							"path": [
-								"ttc-campaigns",
-								"v1",
-								"campaigns",
-								""
-							]
-						}
+						"url": "{{gateway}}/ttc-campaigns/v1/campaigns/"
 					},
 					"response": []
 				},
@@ -239,16 +161,7 @@
 							"mode": "raw",
 							"raw": ""
 						},
-						"url": {
-							"raw": "{{gateway}}/actuator/refresh",
-							"host": [
-								"{{gateway}}"
-							],
-							"path": [
-								"actuator",
-								"refresh"
-							]
-						}
+						"url": "{{gateway}}/actuator/refresh"
 					},
 					"response": []
 				},
@@ -261,16 +174,7 @@
 							"mode": "raw",
 							"raw": ""
 						},
-						"url": {
-							"raw": "{{gateway}}/actuator/health",
-							"host": [
-								"{{gateway}}"
-							],
-							"path": [
-								"actuator",
-								"health"
-							]
-						}
+						"url": "{{gateway}}/actuator/health"
 					},
 					"response": []
 				}
@@ -293,17 +197,7 @@
 							"mode": "raw",
 							"raw": ""
 						},
-						"url": {
-							"raw": "{{gateway}}/ttc-query-campaign/actuator/health",
-							"host": [
-								"{{gateway}}"
-							],
-							"path": [
-								"ttc-query-campaign",
-								"actuator",
-								"health"
-							]
-						}
+						"url": "{{gateway}}/ttc-query-campaign/actuator/health"
 					},
 					"response": []
 				},
@@ -321,18 +215,7 @@
 							"mode": "raw",
 							"raw": ""
 						},
-						"url": {
-							"raw": "{{gateway}}/ttc-query-campaign/v1/inflight/activiti",
-							"host": [
-								"{{gateway}}"
-							],
-							"path": [
-								"ttc-query-campaign",
-								"v1",
-								"inflight",
-								"activiti"
-							]
-						}
+						"url": "{{gateway}}/ttc-query-campaign/v1/inflight/activiti"
 					},
 					"response": []
 				},
@@ -350,18 +233,7 @@
 							"mode": "raw",
 							"raw": ""
 						},
-						"url": {
-							"raw": "{{gateway}}/ttc-query-campaign/v1/processed/activiti",
-							"host": [
-								"{{gateway}}"
-							],
-							"path": [
-								"ttc-query-campaign",
-								"v1",
-								"processed",
-								"activiti"
-							]
-						}
+						"url": "{{gateway}}/ttc-query-campaign/v1/processed/activiti"
 					},
 					"response": []
 				},
@@ -379,18 +251,7 @@
 							"mode": "raw",
 							"raw": ""
 						},
-						"url": {
-							"raw": "{{gateway}}/ttc-query-campaign/v1/discarded/activiti",
-							"host": [
-								"{{gateway}}"
-							],
-							"path": [
-								"ttc-query-campaign",
-								"v1",
-								"discarded",
-								"activiti"
-							]
-						}
+						"url": "{{gateway}}/ttc-query-campaign/v1/discarded/activiti"
 					},
 					"response": []
 				},
@@ -403,18 +264,7 @@
 							"mode": "raw",
 							"raw": ""
 						},
-						"url": {
-							"raw": "{{gateway}}/ttc-query-campaign/reactive/processed/activiti",
-							"host": [
-								"{{gateway}}"
-							],
-							"path": [
-								"ttc-query-campaign",
-								"reactive",
-								"processed",
-								"activiti"
-							]
-						}
+						"url": "{{gateway}}/ttc-query-campaign/reactive/processed/activiti"
 					},
 					"response": []
 				},
@@ -427,18 +277,25 @@
 							"mode": "raw",
 							"raw": ""
 						},
-						"url": {
-							"raw": "{{gateway}}/ttc-query-campaign/reactive/discarded/activiti",
-							"host": [
-								"{{gateway}}"
-							],
-							"path": [
-								"ttc-query-campaign",
-								"reactive",
-								"discarded",
-								"activiti"
-							]
-						}
+						"url": "{{gateway}}/ttc-query-campaign/reactive/discarded/activiti"
+					},
+					"response": []
+				},
+				{
+					"name": "Clean Tweets",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{kcAccessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "{{gateway}}/ttc-query-campaign/v1/"
 					},
 					"response": []
 				}
@@ -461,17 +318,7 @@
 							"mode": "raw",
 							"raw": ""
 						},
-						"url": {
-							"raw": "{{gateway}}/ttc-connectors-processing/actuator/health",
-							"host": [
-								"{{gateway}}"
-							],
-							"path": [
-								"ttc-connectors-processing",
-								"actuator",
-								"health"
-							]
-						}
+						"url": "{{gateway}}/ttc-connectors-processing/actuator/health"
 					},
 					"response": []
 				},
@@ -489,17 +336,7 @@
 							"mode": "raw",
 							"raw": ""
 						},
-						"url": {
-							"raw": "{{gateway}}/ttc-connectors-processing/v1/",
-							"host": [
-								"{{gateway}}"
-							],
-							"path": [
-								"ttc-connectors-processing",
-								"v1",
-								""
-							]
-						}
+						"url": "{{gateway}}/ttc-connectors-processing/v1/"
 					},
 					"response": []
 				}
@@ -522,17 +359,7 @@
 							"mode": "raw",
 							"raw": ""
 						},
-						"url": {
-							"raw": "{{gateway}}/ttc-connectors-reward/v1/",
-							"host": [
-								"{{gateway}}"
-							],
-							"path": [
-								"ttc-connectors-reward",
-								"v1",
-								""
-							]
-						}
+						"url": "{{gateway}}/ttc-connectors-reward/v1/"
 					},
 					"response": []
 				},
@@ -550,17 +377,7 @@
 							"mode": "raw",
 							"raw": ""
 						},
-						"url": {
-							"raw": "{{gateway}}/ttc-connectors-reward/actuator/health",
-							"host": [
-								"{{gateway}}"
-							],
-							"path": [
-								"ttc-connectors-reward",
-								"actuator",
-								"health"
-							]
-						}
+						"url": "{{gateway}}/ttc-connectors-reward/actuator/health"
 					},
 					"response": []
 				},
@@ -578,18 +395,7 @@
 							"mode": "raw",
 							"raw": ""
 						},
-						"url": {
-							"raw": "{{gateway}}/ttc-connectors-reward/v1/rewards/activiti",
-							"host": [
-								"{{gateway}}"
-							],
-							"path": [
-								"ttc-connectors-reward",
-								"v1",
-								"rewards",
-								"activiti"
-							]
-						}
+						"url": "{{gateway}}/ttc-connectors-reward/v1/rewards/activiti"
 					},
 					"response": []
 				},
@@ -607,18 +413,7 @@
 							"mode": "raw",
 							"raw": ""
 						},
-						"url": {
-							"raw": "{{gateway}}/ttc-connectors-reward/v1/rewards/activiti",
-							"host": [
-								"{{gateway}}"
-							],
-							"path": [
-								"ttc-connectors-reward",
-								"v1",
-								"rewards",
-								"activiti"
-							]
-						}
+						"url": "{{gateway}}/ttc-connectors-reward/v1/rewards/activiti"
 					},
 					"response": []
 				}
@@ -641,17 +436,7 @@
 							"mode": "raw",
 							"raw": ""
 						},
-						"url": {
-							"raw": "{{gateway}}/ttc-connectors-ranking/v1/",
-							"host": [
-								"{{gateway}}"
-							],
-							"path": [
-								"ttc-connectors-ranking",
-								"v1",
-								""
-							]
-						}
+						"url": "{{gateway}}/ttc-connectors-ranking/v1/"
 					},
 					"response": []
 				},
@@ -669,17 +454,7 @@
 							"mode": "raw",
 							"raw": ""
 						},
-						"url": {
-							"raw": "{{gateway}}/ttc-connectors-ranking/actuator/health",
-							"host": [
-								"{{gateway}}"
-							],
-							"path": [
-								"ttc-connectors-ranking",
-								"actuator",
-								"health"
-							]
-						}
+						"url": "{{gateway}}/ttc-connectors-ranking/actuator/health"
 					},
 					"response": []
 				},
@@ -697,19 +472,7 @@
 							"mode": "raw",
 							"raw": ""
 						},
-						"url": {
-							"raw": "{{gateway}}/ttc-connectors-ranking/v1/rank/activiti/positive",
-							"host": [
-								"{{gateway}}"
-							],
-							"path": [
-								"ttc-connectors-ranking",
-								"v1",
-								"rank",
-								"activiti",
-								"positive"
-							]
-						}
+						"url": "{{gateway}}/ttc-connectors-ranking/v1/rank/activiti/positive"
 					},
 					"response": []
 				},
@@ -727,19 +490,43 @@
 							"mode": "raw",
 							"raw": ""
 						},
-						"url": {
-							"raw": "{{gateway}}/ttc-connectors-ranking/v1/rank/activiti/neutral",
-							"host": [
-								"{{gateway}}"
-							],
-							"path": [
-								"ttc-connectors-ranking",
-								"v1",
-								"rank",
-								"activiti",
-								"neutral"
-							]
-						}
+						"url": "{{gateway}}/ttc-connectors-ranking/v1/rank/activiti/neutral"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Rankings For Activiti Campaign Negative",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{kcAccessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "{{gateway}}/ttc-connectors-ranking/v1/rank/activiti/negative"
+					},
+					"response": []
+				},
+				{
+					"name": "Clean Rankings",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{kcAccessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "{{gateway}}/ttc-connectors-ranking/v1/rank/activiti"
 					},
 					"response": []
 				}
@@ -796,20 +583,7 @@
 						}
 					]
 				},
-				"url": {
-					"raw": "{{idm}}/auth/realms/{{realm}}/protocol/openid-connect/token",
-					"host": [
-						"{{idm}}"
-					],
-					"path": [
-						"auth",
-						"realms",
-						"{{realm}}",
-						"protocol",
-						"openid-connect",
-						"token"
-					]
-				}
+				"url": "{{idm}}/auth/realms/{{realm}}/protocol/openid-connect/token"
 			},
 			"response": []
 		},
@@ -827,18 +601,7 @@
 					"mode": "raw",
 					"raw": ""
 				},
-				"url": {
-					"raw": "{{gateway}}/ttc-rb-english-campaign/v1/process-instances/",
-					"host": [
-						"{{gateway}}"
-					],
-					"path": [
-						"ttc-rb-english-campaign",
-						"v1",
-						"process-instances",
-						""
-					]
-				}
+				"url": "{{gateway}}/ttc-rb-english-campaign/v1/process-instances/"
 			},
 			"response": []
 		}
