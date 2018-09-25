@@ -90,6 +90,8 @@ We will start by forking and cloning the following two projects:
 
 Before cloning anything, we recommend to create a **workshop/** directory somewhere in your laptop/pc.
 
+As a temporary measure, in every Jenkinsfile involved in this workshop, it is required to change every reference to `develop` branch for `master`.
+
 # Front End (Client)
 
 ## Postman Collection
@@ -106,15 +108,22 @@ As any application we will end up having a Front End that is going to interact w
 - Fork [http://github.com/activiti/ttc-dashboard-ui](http://github.com/activiti/ttc-dashboard-ui)
 - Clone to your local environment inside the **workshop/** directory
 
+Before going further, it is required just a bit of configuration:
+  - Edit proxy.conf.json (only needed if run locally)
+``` 
+    "target": "YOUR GATEWAY URL GOES HERE"
+```
+  - Edit KeycloakConfig in src/environments/environment.ts 
+```
+    "url": "YOUR KEYCLOAK URL GOES HERE"
+```
+
 ## (Optional): You can run the Front End Application locally
 
 - go into the ttc-dashboard-ui directory and execute
   - npm install
   - npm start
-  - Edit proxy.conf.json 
-``` 
-    "target": "YOUR GATEWAY URL GOES HERE",
-```
+
 Note: If you don't have node installed, please install it from here https://nodejs.org/en/
 
 Once 'npm start' finishes you can access the application by pointing to [http://localhost:8080](http://localhost:8080)
@@ -124,7 +133,7 @@ You can import the project to run it inside the Kubernetes Cluster along your se
 
 Just import it into Jenkins X by executing:
 
- > jx import --branches "develop|PR-.*|feature.*"
+ > jx import
  
  
  In order to access to the app you can do 
@@ -271,7 +280,7 @@ This service emulates an internal service that will connect with an external Soc
 - commit & push the changes to your fork
 
 - Import into Jenkins X (make sure that you are in your dev environment -> jx env dev):
-  > jx import --branches "develop|PR-.*|feature.*"
+  > jx import
 
 - Go to Jenkins X and check that the new project is registered and being built (jx get urls -> to retrieve the URLs again)
 
@@ -414,7 +423,7 @@ We are using the Activiti Runtime Process Engine to automate the execution of th
 - commit & push the changes to your fork
 
 - Import into Jenkins X (make sure that you are in your dev environment -> jx env dev):
-  > jx import --branches "develop|PR-.*|feature.*"
+  > jx import
 
 - Check in Jenkins UI that the project was imported and the initial build is triggered
 
@@ -452,7 +461,7 @@ When having a single campaing we can access going straigh to the service, but in
 - Update the Org for your user inside the JenkinsFile
 - Push the changes
 - Import into Jenkins X (make sure that you are in your dev environment -> jx env dev):
-  > jx import --branches "develop|PR-.*|feature.*"
+  > jx import
 
 This service expose the /v1/campaigns endpoint where we can find out the deployed campaigns. 
 
@@ -466,7 +475,7 @@ This service is called Query Service and in order to get it up and running we wi
   > git clone http://github.com/{your user}/ttc-query-campaign
 
 - Import it to Jenkins X:
-  > jx import --branches "develop|PR-.*|feature.*"
+  > jx import 
 
 - Check in Jenkins UI that the project was imported and the initial build is triggered
 
@@ -545,7 +554,7 @@ Clone all of those projects inside the **workshop/** directory
 Update all the orgs inside the JenkinsFile to use your user name as we did for the other services.
 
 Import them all to Jenkins X
-> jx import --branches "develop|PR-.*|feature.*"
+> jx import
 
 Wait for the pipelines to finish and now you are ready to check the UI, it should show the campaign deployed in the main screen and all the Services should be green. You can also turn on the Dummy Twitter Feed and see how the campaign match, process, rank and reward engaged users.
 
