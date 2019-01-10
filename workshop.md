@@ -25,7 +25,7 @@ Notice that with some work, you should be able to run this example in your local
 - [Repositories](#repositories)
 - [Front End](#front-end)
 - [Single Entrypoint](#single-entrypoint)
-- [Our First Service](#our-first-service)
+- [Service](#our-first-service)
   - [Configuring Nexus](#configuring-nexus)
 - [Adding Environment Dependencies](#adding-environment-dependencies)
 - [Building a Marketing Campaign](#building-a-marketing-campaign)
@@ -276,6 +276,10 @@ This service emulates an internal service that will connect with an external Soc
       CHARTMUSEUM_CREDS = credentials('jenkins-x-chartmuseum')
     }
 ```
+Also comment out `./updatebot.sh` so that it becomes:
+```
+           // sh './updatebot.sh'
+```
 
 - commit & push the changes to your fork
 
@@ -420,6 +424,8 @@ We are using the Activiti Runtime Process Engine to automate the execution of th
       CHARTMUSEUM_CREDS = credentials('jenkins-x-chartmuseum')
     }
 ```
+Again comment out `./updatebot.sh` in the Jenkinsfile.
+
 - commit & push the changes to your fork
 
 - Import into Jenkins X (make sure that you are in your dev environment -> jx env dev):
@@ -458,7 +464,7 @@ Before calling these services, you need to obtain the token by executing the req
 When having a single campaing we can access going straigh to the service, but in most scenarios we will need some kind of Campaign Controller (High Level Application Controller). We are going to deploy a very simple service called Campaigns Service which is in charge of keeping track of which campaigns are deployed by using the Service Registry to filter the available services and only show the ones tagged with metadata related to campaigns. 
 
 - Fork and Clone the [Campaigns Service](http://github.com/activiti/ttc-campaigns-service)
-- Update the Org for your user inside the JenkinsFile
+- Update the Org for your user inside the JenkinsFile and comment out `./updatebot.sh`
 - Push the changes
 - Import into Jenkins X (make sure that you are in your dev environment -> jx env dev):
   > jx import
@@ -473,7 +479,8 @@ This service is called Query Service and in order to get it up and running we wi
 - Fork [http://github.com/activiti/ttc-query-campaign](http://github.com/activiti/ttc-query-campaign)
 - Clone it inside the **workshop/** directory
   > git clone http://github.com/{your user}/ttc-query-campaign
-
+- Update the Org for your user inside the JenkinsFile and comment out `./updatebot.sh`
+- Push the changes
 - Import it to Jenkins X:
   > jx import 
 
