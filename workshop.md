@@ -68,12 +68,14 @@ When Jenkins X is installed you can use the following command to see all the Jen
 - Copy & Access Jenkins URL and login (user admin/{provided jx password})
 - Copy & Access Nexus URL and login with the same credentials used for Jenkins
 
-By default, Jenkins X create 3 environments
+By default, Jenkins X creates 3 environments
 - *dev* is where you do the work
 - *staging* is where your services will live (run) as soon as you register them in Jenkins X. Services will be automatically promoted to this environment.
 - *production* is where your services will serve real clients. You need to manually promote services to this environment.
 Use the following command to check and select in which environment you want to be:
 > jx env (and select on of the options)
+
+If your cluster is missing an env that you want then there's [`jx create environment`](https://github.com/jenkins-x/jx-docs/blob/master/content/commands/jx_create_environment.md) but you should have what you need.
 
 For importing new projects we will need to be in the **dev** environment.
 
