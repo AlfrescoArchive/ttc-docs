@@ -92,8 +92,6 @@ We will start by forking and cloning the following two projects:
 
 Before cloning anything, we recommend to create a **workshop/** directory somewhere in your laptop/pc.
 
-As a temporary measure, in every Jenkinsfile involved in this workshop, it is required to change every reference to `develop` branch for `master`.
-
 # Front End (Client)
 
 ## Postman Collection
@@ -501,10 +499,10 @@ Domain specific data for the campaign, only the tweets that have matched with th
 ## Configuring PostgreSQL as Data Storage
 By default the Query Service is using H2 as an In-Memory Database, but you can change this by uncommenting the Spring Data JPA properties inside the application.properties file:
 
-https://github.com/Activiti/ttc-query-campaign/blob/develop/src/main/resources/application.properties#L11
+https://github.com/Activiti/ttc-query-campaign/blob/master/src/main/resources/application.properties#L11
 
 Notice that the Chart also have the properties with the DB User and Password: 
-https://github.com/Activiti/ttc-query-campaign/blob/develop/charts/ttc-query-campaign/values.yaml#L18
+https://github.com/Activiti/ttc-query-campaign/blob/master/charts/ttc-query-campaign/values.yaml#L18
 
 Once this is setup, the Service will expect to have a PostgreSQL DB inside the environment to work. In order to enable this, we will proceed in the same way as we did for adding RabbitMQ:
 
