@@ -96,7 +96,7 @@ Before cloning anything, we recommend to create a **workshop/** directory somewh
 
 ## Postman Collection
 
-The simplest client ever is our Blueprint Postman collection that you can use to interact with the services. Download/Clone the JSON file (https://github.com/Activiti/ttc-docs/blob/develop/BluePrint-%20Trending%20Topic%20Campaigns.postman_collection.json), import it into the [Postman app](https://www.getpostman.com) and then create an environment with the following variables as you follow the tutorial:
+The simplest client ever is our Blueprint Postman collection that you can use to interact with the services. Download/Clone the JSON file (https://github.com/Activiti/ttc-docs/blob/master/BluePrint-%20Trending%20Topic%20Campaigns.postman_collection.json), import it into the [Postman app](https://www.getpostman.com) and then create an environment with the following variables as you follow the tutorial:
 - gateway: {Gateway URL}
 - idm: {Keycloak URL}
 - realm: activiti
